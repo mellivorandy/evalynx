@@ -116,3 +116,26 @@ npm run dev
 - 若遇到問題請使用 GitHub Issues 回報
 
 - 討論用 Google Meet，每週五晚上 8 點
+
+## 附註
+
+### Windows 使用者首次執行 npm 相關指令可能出現錯誤
+如果你在執行 npm install 或 npm run dev 時遇到這類錯誤：
+
+```bash
+npm.ps1 cannot be loaded because running scripts is disabled on this system.
+```
+
+這是因為 Windows PowerShell 預設不允許執行 JavaScript 套件安裝腳本。
+
+解法：解除執行權限限制，請依下列步驟操作：
+
+- 以系統管理員身份開啟 PowerShell（在開始選單搜尋「PowerShell」-> 右鍵「以系統管理員執行」）
+
+- 輸入以下指令後按 Enter：
+
+```bash
+Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
+```
+
+接著系統會詢問是否變更設定，請輸入 Y ，這樣就可以正常執行 npm install、npm run dev 等前端開發指令了。
