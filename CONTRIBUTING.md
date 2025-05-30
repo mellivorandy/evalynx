@@ -108,12 +108,24 @@ fix: 修正登入錯誤提示
 <br>
 
 ## 測試
-每次功能完成後，請本機跑一次以下流程確認無誤：
+每次功能完成後，請在本機執行以下流程，確認無誤再提交：
 
 ```bash
+# 啟動後端 Laravel
 php artisan serve
+
+# 啟動前端 Vite 開發伺服器
 npm run dev
+
+# 執行 Laravel 測試（包含單元與功能測試）
+php artisan test
 ```
+
+- 提醒：此專案已有自動化測試，若 php artisan test 出現錯誤（FAIL），代表本次功能未正確實作，請先修正通過所有測試後再提交。
+
+- 請開兩個終端機同時執行 `php artisan serve` 和 `npm run dev`，前後端需要分開啟動才能正確顯示網頁。
+
+<br>
 
 ## 其他說明
 - 若遇到問題請使用 GitHub Issues 回報
