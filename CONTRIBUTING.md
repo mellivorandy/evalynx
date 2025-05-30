@@ -83,11 +83,14 @@ npm install
 
 # 5. 設定資料庫（請先用 phpMyAdmin 建立資料庫 evalynx 並設定 .env）
 
-# 6. 清除快取與建立資料表
+# 6. 產生 Laravel 應用金鑰
+php artisan key:generate
+
+# 7. 清除快取與建立資料表
 php artisan config:clear
 php artisan migrate
 
-# 7. 啟動 Laravel + React 開發伺服器
+# 8. 啟動 Laravel + React 開發伺服器
 php artisan serve              # 啟動後端
 npm run dev                    # 啟動前端
 ```
