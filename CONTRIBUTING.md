@@ -48,20 +48,20 @@ php artisan breeze:install react
 # 3. 安裝 Node.js 套件（React 前端）
 npm install
 
-# 4. 啟動 Laravel 開發伺服器
-php artisan serve
-
-# 5. 啟動前端 Vite（熱重載）
-npm run dev
-
-# 6. 複製 .env 並建立資料庫
+# 4. 複製 .env 並建立資料庫
 copy .env.example .env         # Windows 用 copy；mac/Linux 用 cp
 
-# 編輯 .env 設定你的資料庫帳密
+# 5. 編輯 .env 設定你的資料庫帳密
 php artisan config:clear
 
-# 7. 執行資料表 migration
+# 6. 執行資料表 migration
 php artisan migrate
+
+# 7. 啟動 Laravel 開發伺服器
+php artisan serve
+
+# 8. 啟動前端 Vite（熱重載）
+npm run dev
 ```
 
 ## 組員安裝步驟
