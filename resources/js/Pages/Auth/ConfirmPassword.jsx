@@ -20,11 +20,10 @@ export default function ConfirmPassword() {
 
     return (
         <GuestLayout>
-            <Head title="Confirm Password" />
+            <Head title="確認密碼" />
 
             <div className="mb-4 text-sm text-gray-600">
-                This is a secure area of the application. Please confirm your
-                password before continuing.
+                為了保護你的帳戶，請在繼續之前確認你的密碼。
             </div>
 
             <form onSubmit={submit}>
@@ -46,7 +45,7 @@ export default function ConfirmPassword() {
 
                 <div className="mt-4 flex items-center justify-end">
                     <PrimaryButton className="ms-4" disabled={processing}>
-                        Confirm
+                        確認
                     </PrimaryButton>
                 </div>
             </form>
