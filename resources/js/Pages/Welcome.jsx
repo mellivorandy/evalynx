@@ -24,7 +24,7 @@ export default function Welcome({ auth, notices }) {
     return (
         <>
             <Head title="首頁 - 高大創新創意競賽" />
-            <div className="bg-gray-50 text-gray-800 dark:bg-black dark:text-white">
+            <div className="bg-gray-50 text-gray-800 dark:bg-black dark:text-white min-h-screen">
                 <Header auth={auth} />
 
                 <main className="max-w-6xl mx-auto px-4 py-8 space-y-12">
@@ -106,40 +106,58 @@ export default function Welcome({ auth, notices }) {
                         )}
                     </section>
 
-                    {/* 最新公告 */}
-                    <section id="announcements">
-                        <h2 className="text-2xl font-bold mb-4">最新公告</h2>
-                        <ul className="space-y-4">
+                    {/* 最新公告區塊 */}
+                    <motion.section
+                        id="announcements"
+                        className="bg-indigo-50 dark:bg-zinc-900 rounded-lg p-6 shadow"
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5 }}
+                    >
+                        <h2 className="text-2xl font-bold mb-4 text-indigo-700 dark:text-white">
+                            最新公告
+                        </h2>
+                        <ul className="space-y-2">
                             {notices.map((notice) => (
-                                <li
+                                <motion.li
                                     key={notice.id}
-                                    className="border-b pb-2 cursor-pointer"
+                                    className="bg-white dark:bg-zinc-800 p-4 rounded-md shadow-sm border border-gray-200 dark:border-zinc-700 cursor-pointer"
                                     onClick={() => setSelectedNotice(notice)}
+                                    whileHover={{
+                                        scale: 1.03,
+                                        boxShadow:
+                                            "0 4px 20px rgba(0, 0, 0, 0.1)",
+                                    }}
+                                    transition={{
+                                        type: "spring",
+                                        stiffness: 300,
+                                        damping: 15,
+                                    }}
                                 >
-                                    <span className="text-blue-600 hover:underline">
+                                    <h3 className="text-blue-600 font-semibold text-base hover:underline">
                                         {notice.title}
-                                    </span>
-                                    <p className="text-sm text-gray-500">
+                                    </h3>
+                                    <p className="text-sm text-gray-500 dark:text-gray-400">
                                         {new Date(
                                             notice.created_at
                                         ).toLocaleDateString()}
                                     </p>
-                                </li>
+                                </motion.li>
                             ))}
                         </ul>
-                    </section>
+                    </motion.section>
                 </main>
 
                 <Footer />
 
-                {/* 模態視窗 */}
+                {/* 模態公告視窗 */}
                 <AnimatePresence>
                     {selectedNotice && (
                         <div
                             className="fixed inset-0 z-50 flex items-center justify-center p-4"
                             onClick={() => setSelectedNotice(null)}
                         >
-                            {/* 背景模糊層 */}
+                            {/* 背景模糊遮罩 */}
                             <motion.div
                                 className="absolute inset-0 bg-black bg-opacity-50 backdrop-blur-sm"
                                 initial={{ opacity: 0 }}
@@ -147,16 +165,16 @@ export default function Welcome({ auth, notices }) {
                                 exit={{ opacity: 0 }}
                             />
 
-                            {/* 彈出視窗內容 */}
+                            {/* 彈窗內容 */}
                             <motion.div
                                 className="relative z-10 bg-white dark:bg-zinc-800 p-6 rounded shadow-lg max-w-2xl w-full"
                                 initial={{ opacity: 0, scale: 0.95 }}
                                 animate={{ opacity: 1, scale: 1 }}
                                 exit={{ opacity: 0, scale: 0.95 }}
-                                onClick={(e) => e.stopPropagation()} // 阻止點擊內容區關閉
+                                onClick={(e) => e.stopPropagation()}
                             >
                                 <button
-                                    className="absolute top-2 right-2 text-gray-400 hover:text-gray-600 dark:hover:text-white"
+                                    className="absolute top-2 right-2 text-gray-400 hover:text-gray-600 dark:hover:text-white text-xl"
                                     onClick={() => setSelectedNotice(null)}
                                 >
                                     &times;
