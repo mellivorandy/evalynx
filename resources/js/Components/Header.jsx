@@ -1,9 +1,16 @@
+import { Link } from "@inertiajs/react";
+
 export default function Header({ auth }) {
     return (
         <header className="bg-indigo-700 text-white shadow">
             <div className="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
                 <h1 className="text-xl font-semibold">
-                    高雄大學創新創意競賽系統
+                    <Link
+                        href="/"
+                        className="hover:text-yellow-400 transition-colors duration-200"
+                    >
+                        高雄大學創新創意競賽系統
+                    </Link>
                 </h1>
 
                 <nav className="space-x-4">
