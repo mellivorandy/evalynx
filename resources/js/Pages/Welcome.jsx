@@ -1,12 +1,16 @@
 import { useState, useEffect } from "react";
 import Header from "@/Components/Header";
 import Footer from "@/Components/Footer";
-import SidePanel from '@/Components/SidePanel';
+import LoginModal from "@/Components/LoginModal";
+import RegisterModal from "@/Components/RegisterModal";
+import SidePanel from "@/Components/SidePanel";
 import { Head, Link } from "@inertiajs/react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function Welcome({ auth, notices }) {
     const [selectedNotice, setSelectedNotice] = useState(null);
+    const [showLoginModal, setShowLoginModal] = useState(false);
+    const [showRegisterModal, setShowRegisterModal] = useState(false);
 
     useEffect(() => {
         if (selectedNotice) {
@@ -26,7 +30,11 @@ export default function Welcome({ auth, notices }) {
         <>
             <Head title="首頁 - 高大創新創意競賽" />
             <div className="bg-gray-50 text-gray-800 dark:bg-black dark:text-white min-h-screen relative">
-                <Header auth={auth} />
+                <Header
+                    auth={auth}
+                    onLoginClick={() => setShowLoginModal(true)}
+                    onRegisterClick={() => setShowRegisterModal(true)}
+                />
                 <SidePanel auth={auth} />
 
                 <main className="max-w-6xl mx-auto px-4 py-8 space-y-12">
@@ -127,7 +135,8 @@ export default function Welcome({ auth, notices }) {
                                     onClick={() => setSelectedNotice(notice)}
                                     whileHover={{
                                         scale: 1.03,
-                                        boxShadow: "0 4px 20px rgba(0, 0, 0, 0.1)",
+                                        boxShadow:
+                                            "0 4px 20px rgba(0, 0, 0, 0.1)",
                                     }}
                                     transition={{
                                         type: "spring",
@@ -139,7 +148,9 @@ export default function Welcome({ auth, notices }) {
                                         {notice.title}
                                     </h3>
                                     <p className="text-sm text-gray-500 dark:text-gray-400">
-                                        {new Date(notice.created_at).toLocaleDateString()}
+                                        {new Date(
+                                            notice.created_at
+                                        ).toLocaleDateString()}
                                     </p>
                                 </motion.li>
                             ))}
@@ -189,6 +200,20 @@ export default function Welcome({ auth, notices }) {
                         </div>
                     )}
                 </AnimatePresence>
+
+                <RegisterModal
+                    isOpen={showRegisterModal}
+                    onClose={() => setShowRegisterModal(false)}
+                    onSwitchToLogin={() => {
+                        setShowRegisterModal(false);
+                        setTimeout(() => setShowLoginModal(true), 300);
+                    }}
+                />
+                <LoginModal
+                    isOpen={showLoginModal}
+                    onClose={() => setShowLoginModal(false)}
+                    canResetPassword={true}
+                />
             </div>
         </>
     );

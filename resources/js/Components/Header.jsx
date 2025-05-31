@@ -1,6 +1,6 @@
 import { Link } from "@inertiajs/react";
 
-export default function Header({ auth }) {
+export default function Header({ auth, onLoginClick, onRegisterClick }) {
     return (
         <header className="bg-indigo-700 text-white shadow">
             <div className="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
@@ -23,18 +23,18 @@ export default function Header({ auth }) {
                         </a>
                     ) : (
                         <>
-                            <a
-                                href="/login"
+                            <button
+                                onClick={onLoginClick}
                                 className="transition text-white hover:text-yellow-400"
                             >
                                 登入
-                            </a>
-                            <a
-                                href="/register"
+                            </button>
+                            <button
+                                onClick={onRegisterClick}
                                 className="transition text-white hover:text-yellow-400"
                             >
                                 註冊
-                            </a>
+                            </button>
                         </>
                     )}
                 </nav>

@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('past_works', function (Blueprint $table) {
+        Schema::create('past_projects', function (Blueprint $table) {
             $table->id();
             $table->string('team_name');
             $table->json('members')->nullable();
