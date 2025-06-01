@@ -19,7 +19,7 @@ export default function Header({ auth, onLoginClick, onRegisterClick }) {
                             href="/dashboard"
                             className="transition text-white hover:text-yellow-300"
                         >
-                            進入後台
+                            我的資訊
                         </a>
                     ) : (
                         <>

@@ -25,4 +25,10 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+Route::get('/notices', function () {
+    return Inertia::render('Notices/Index', [
+        'notices' => \App\Models\Notice::orderBy('created_at', 'desc')->get(),
+    ]);
+});
+
 require __DIR__.'/auth.php';

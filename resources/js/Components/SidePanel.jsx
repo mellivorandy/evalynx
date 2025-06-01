@@ -7,7 +7,7 @@ export default function SidePanel({ auth }) {
     return (
         <div className="fixed top-0 bottom-0 left-0 z-40">
             {/* Side panel container */}
-            <div className="bg-[#81D8D0] text-white w-16 hover:w-52 transition-all duration-300 overflow-visible shadow-lg flex flex-col items-start h-full py-4 group">
+            <div className="bg-[#81D8D0] text-white w-16 hover:w-52 transition-all duration-300 overflow-visible shadow-lg flex flex-col items-start h-full py-4 group space-y-4">
                 {/* 首頁 */}
                 <Link
                     href="#welcome"
@@ -74,7 +74,7 @@ export default function SidePanel({ auth }) {
                         <img
                             src="/images/archive-icon.png"
                             alt="歷屆作品"
-                            className="w-7 h-7 mr-2"
+                            className="w-8 h-8 mr-2"
                         />
                         <span className="whitespace-nowrap hidden group-hover:inline text-black dark:text-white">
                             歷屆作品

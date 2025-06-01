@@ -2,26 +2,34 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Notice;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class NoticeController extends Controller
 {
-    public function show($id)
+    public function index(Request $request)
     {
-        $notice = Notice::findOrFail($id);
-        return Inertia::render('Notices/Show', [
-            'notice' => $notice,
-        ]);
-    }
+        $query = Notice::query();
 
-    public function index()
-    {
-        $notices = Notice::latest()->get();
+        if ($search = $request->search) {
+            $query->where('title', 'like', "%{$search}%")
+                ->orWhere('content', 'like', "%{$search}%");
+        }
 
-        return Inertia::render('Notices/Index', [
+        if ($year = $request->year) {
+            $query->whereYear('created_at', $year);
+        }
+
+        if ($month = $request->month) {
+            $query->whereMonth('created_at', $month);
+        }
+
+        $notices = $query->orderBy('created_at', 'desc')->get();
+
+        return Inertia::render('NoticeIndex', [
             'notices' => $notices,
+            'filters' => $request->only(['search', 'year', 'month']),
         ]);
     }
 }

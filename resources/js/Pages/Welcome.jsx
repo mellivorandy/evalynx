@@ -3,12 +3,14 @@ import Header from "@/Components/Header";
 import Footer from "@/Components/Footer";
 import LoginModal from "@/Components/LoginModal";
 import RegisterModal from "@/Components/RegisterModal";
+import NoticeQueryModal from "@/Components/NoticeQueryModal";
 import SidePanel from "@/Components/SidePanel";
 import { Head, Link } from "@inertiajs/react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function Welcome({ auth, notices }) {
     const [selectedNotice, setSelectedNotice] = useState(null);
+    const [showNoticeModal, setShowNoticeModal] = useState(false);
     const [showLoginModal, setShowLoginModal] = useState(false);
     const [showRegisterModal, setShowRegisterModal] = useState(false);
 
@@ -60,9 +62,17 @@ export default function Welcome({ auth, notices }) {
                     {/* 功能導覽 */}
                     <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 text-center">
                         {auth?.user?.role && (
-                            <Link
-                                href="/notices"
-                                className="bg-indigo-100 p-4 rounded shadow hover:bg-indigo-200"
+                            <motion.div
+                                className="bg-indigo-100 p-4 rounded shadow hover:bg-indigo-200 text-center flex flex-col items-center justify-center h-28 cursor-pointer"
+                                whileHover={{
+                                    rotateY: 360,
+                                    transition: {
+                                        duration: 0.8,
+                                        ease: "easeInOut",
+                                    },
+                                }}
+                                style={{ transformStyle: "preserve-3d" }}
+                                onClick={() => setShowNoticeModal(true)}
                             >
                                 <h2 className="font-semibold text-lg">
                                     公告查詢
@@ -70,27 +80,13 @@ export default function Welcome({ auth, notices }) {
                                 <p className="text-sm text-gray-600">
                                     查看最新比賽資訊
                                 </p>
-                            </Link>
-                        )}
-
-                        {auth?.user?.role && (
-                            <Link
-                                href="/login"
-                                className="bg-indigo-100 p-4 rounded shadow hover:bg-indigo-200"
-                            >
-                                <h2 className="font-semibold text-lg">
-                                    登入系統
-                                </h2>
-                                <p className="text-sm text-gray-600">
-                                    管理或查看資料
-                                </p>
-                            </Link>
+                            </motion.div>
                         )}
 
                         {auth?.user?.role === "student" && (
                             <Link
                                 href="/register/info"
-                                className="bg-indigo-100 p-4 rounded shadow hover:bg-indigo-200"
+                                className="bg-indigo-100 p-4 rounded shadow hover:bg-indigo-200 transition-all duration-300 transform hover:animate-wiggle text-center flex flex-col items-center justify-center h-28"
                             >
                                 <h2 className="font-semibold text-lg">
                                     我要報名
@@ -209,10 +205,18 @@ export default function Welcome({ auth, notices }) {
                         setTimeout(() => setShowLoginModal(true), 300);
                     }}
                 />
+
                 <LoginModal
                     isOpen={showLoginModal}
                     onClose={() => setShowLoginModal(false)}
                     canResetPassword={true}
+                />
+
+                <NoticeQueryModal
+                    notices={notices}
+                    isOpen={showNoticeModal}
+                    onClose={() => setShowNoticeModal(false)}
+                    onSelect={(notice) => setSelectedNotice(notice)}
                 />
             </div>
         </>
