@@ -37,8 +37,12 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }) {
                     animate={{ opacity: 1, backdropFilter: "blur(6px)" }}
                     exit={{ opacity: 0, backdropFilter: "blur(0px)" }}
                     transition={{ duration: 0.5 }}
-                    onClick={onClose}
                 >
+                    <div
+                        className="absolute inset-0 z-0"
+                        onClick={onClose}
+                    ></div>
+                    
                     <div className="absolute inset-0 z-0 pointer-events-none">
                         {Array.from({ length: 30 }).map((_, i) => (
                             <div
