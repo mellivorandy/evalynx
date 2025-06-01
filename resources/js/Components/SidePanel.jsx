@@ -29,7 +29,7 @@ export default function SidePanel({ auth }) {
                     className="flex items-center w-full px-4 py-2 hover:bg-indigo-600"
                 >
                     <img
-                        src="/images/announcments.png"
+                        src="/images/announcments-icon.png"
                         alt="最新公告"
                         className="w-8 h-8 mr-2"
                     />
@@ -44,9 +44,30 @@ export default function SidePanel({ auth }) {
                         href="/register/info"
                         className="flex items-center w-full px-4 py-2 hover:bg-indigo-600"
                     >
-                        <span className="material-icons mr-2">assignment</span>
-                        <span className="whitespace-nowrap hidden group-hover:inline">
+                        <img
+                            src="/images/registration-icon.png"
+                            alt="報名"
+                            className="w-8 h-8 mr-2"
+                        />
+                        <span className="whitespace-nowrap hidden group-hover:inline text-black dark:text-white">
                             我要報名
+                        </span>
+                    </Link>
+                )}
+
+                {/* 管理員專區 */}
+                {auth?.user?.role === "admin" && (
+                    <Link
+                        href="/judge/score"
+                        className="flex items-center w-full px-4 py-2 hover:bg-indigo-600"
+                    >
+                        <img
+                            src="/images/admin-icon.png"
+                            alt="管理員專區"
+                            className="w-8 h-8 mr-2"
+                        />
+                        <span className="whitespace-nowrap hidden group-hover:inline text-black dark:text-white">
+                            管理員專區
                         </span>
                     </Link>
                 )}
@@ -57,8 +78,12 @@ export default function SidePanel({ auth }) {
                         href="/judge/score"
                         className="flex items-center w-full px-4 py-2 hover:bg-indigo-600"
                     >
-                        <span className="material-icons mr-2">gavel</span>
-                        <span className="whitespace-nowrap hidden group-hover:inline">
+                        <img
+                            src="/images/judge-icon.png"
+                            alt="評審專區"
+                            className="w-8 h-8 mr-2"
+                        />
+                        <span className="whitespace-nowrap hidden group-hover:inline text-black dark:text-white">
                             評審專區
                         </span>
                     </Link>
@@ -70,7 +95,7 @@ export default function SidePanel({ auth }) {
                     onMouseEnter={() => setHoveringArchive(true)}
                     onMouseLeave={() => setHoveringArchive(false)}
                 >
-                    <div className="flex items-center w-full px-4 py-2 hover:bg-indigo-600 cursor-pointer">
+                    <div className="flex items-center w-full px-3.5 py-2 hover:bg-indigo-600 cursor-pointer">
                         <img
                             src="/images/archive-icon.png"
                             alt="歷屆作品"

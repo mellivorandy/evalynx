@@ -97,10 +97,40 @@ export default function Welcome({ auth, notices }) {
                             </Link>
                         )}
 
-                        {auth?.user?.role === "judge" && (
-                            <Link
-                                href="/judge/score"
-                                className="bg-indigo-100 p-4 rounded shadow hover:bg-indigo-200"
+                        {auth?.user?.role === "admin" && (
+                            <motion.div
+                                className="bg-indigo-100 p-4 rounded shadow hover:bg-indigo-200 text-center flex flex-col items-center justify-center h-28 cursor-pointer"
+                                whileHover={{
+                                    rotateY: 360,
+                                    transition: {
+                                        duration: 0.8,
+                                        ease: "easeInOut",
+                                    },
+                                }}
+                                style={{ transformStyle: "preserve-3d" }}
+                                onClick={() => setShowNoticeModal(true)}
+                            >
+                                <h2 className="font-semibold text-lg">
+                                    管理員專區
+                                </h2>
+                                <p className="text-sm text-gray-600">
+                                    管理系統與公告
+                                </p>
+                            </motion.div>
+                        )}
+
+                        {auth?.user?.role === "judge" && (        
+                            <motion.div
+                                className="bg-indigo-100 p-4 rounded shadow hover:bg-indigo-200 text-center flex flex-col items-center justify-center h-28 cursor-pointer"
+                                whileHover={{
+                                    rotateY: 360,
+                                    transition: {
+                                        duration: 0.8,
+                                        ease: "easeInOut",
+                                    },
+                                }}
+                                style={{ transformStyle: "preserve-3d" }}
+                                onClick={() => setShowNoticeModal(true)}
                             >
                                 <h2 className="font-semibold text-lg">
                                     評審專區
@@ -108,7 +138,7 @@ export default function Welcome({ auth, notices }) {
                                 <p className="text-sm text-gray-600">
                                     填寫與查閱評分資料
                                 </p>
-                            </Link>
+                            </motion.div>
                         )}
                     </section>
 

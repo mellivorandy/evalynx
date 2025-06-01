@@ -15,12 +15,22 @@ export default function Header({ auth, onLoginClick, onRegisterClick }) {
 
                 <nav className="space-x-4">
                     {auth?.user ? (
-                        <a
-                            href="/dashboard"
-                            className="transition text-white hover:text-yellow-300"
-                        >
-                            我的資訊
-                        </a>
+                        <>
+                            <Link
+                                href="/dashboard"
+                                className="transition text-white hover:text-yellow-300"
+                            >
+                                我的資訊
+                            </Link>
+                            <Link
+                                href={route("logout")}
+                                method="post"
+                                as="button"
+                                className="transition text-white hover:text-yellow-300"
+                            >
+                                登出
+                            </Link>
+                        </>
                     ) : (
                         <>
                             <button
