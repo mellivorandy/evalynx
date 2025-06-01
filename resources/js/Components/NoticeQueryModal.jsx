@@ -1,28 +1,36 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
-export default function NoticeQueryModal({
-    notices,
-    isOpen,
-    onClose,
-    onSelect,
-}) {
+export default function NoticeQueryModal({ notices, isOpen, onClose, onSelect }) {
     const [search, setSearch] = useState("");
     const [filterYear, setFilterYear] = useState("all");
-    const [mouseDownTarget, setMouseDownTarget] = useState(null);
+
+    const modalRef = useRef(null);
+
+    useEffect(() => {
+        const handleKeyDown = (e) => {
+            if (e.key === "Escape") onClose();
+        };
+        window.addEventListener("keydown", handleKeyDown);
+        return () => window.removeEventListener("keydown", handleKeyDown);
+    }, [onClose]);
+
+    const handleBackdropClick = (e) => {
+        if (modalRef.current && !modalRef.current.contains(e.target)) {
+            onClose();
+        }
+    };
 
     const filtered = notices.filter((notice) => {
         const year = new Date(notice.created_at).getFullYear().toString();
-        const matchesKeyword =
-            notice.title.includes(search) || notice.content.includes(search);
-        const matchesYear = filterYear === "all" || year === filterYear;
-        return matchesKeyword && matchesYear;
+        return (
+            (notice.title.includes(search) || notice.content.includes(search)) &&
+            (filterYear === "all" || year === filterYear)
+        );
     });
 
     const yearOptions = Array.from(
-        new Set(
-            notices.map((n) => new Date(n.created_at).getFullYear().toString())
-        )
+        new Set(notices.map((n) => new Date(n.created_at).getFullYear().toString()))
     );
 
     return (
@@ -33,19 +41,14 @@ export default function NoticeQueryModal({
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    onMouseDown={(e) => setMouseDownTarget(e.target)}
-                    onMouseUp={(e) => {
-                        if (mouseDownTarget === e.target) {
-                            onClose();
-                        }
-                    }}
+                    onMouseDown={handleBackdropClick}
                 >
                     <motion.div
+                        ref={modalRef}
                         className="relative bg-white dark:bg-zinc-800 p-6 rounded-lg max-w-3xl w-full z-10 overflow-auto max-h-[90vh]"
                         initial={{ scale: 0.9, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
                         exit={{ scale: 0.9, opacity: 0 }}
-                        onClick={(e) => e.stopPropagation()}
                     >
                         <button
                             className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 text-xl"
@@ -54,7 +57,7 @@ export default function NoticeQueryModal({
                             &times;
                         </button>
 
-                        <h2 className="text-2xl font-bold mb-4 text-indigo-700">
+                        <h2 className="text-2xl font-bold mb-4 text-indigo-700 text-center">
                             公告查詢
                         </h2>
 
@@ -94,10 +97,7 @@ export default function NoticeQueryModal({
                                         {notice.title}
                                     </h3>
                                     <p className="text-sm text-gray-600 dark:text-gray-300">
-                                        發布日期：
-                                        {new Date(
-                                            notice.created_at
-                                        ).toLocaleDateString()}
+                                        發布日期：{new Date(notice.created_at).toLocaleDateString()}
                                     </p>
                                 </li>
                             ))}

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Header from "@/Components/Header";
 import Footer from "@/Components/Footer";
 import LoginModal from "@/Components/LoginModal";
@@ -13,6 +13,7 @@ export default function Welcome({ auth, notices }) {
     const [showNoticeModal, setShowNoticeModal] = useState(false);
     const [showLoginModal, setShowLoginModal] = useState(false);
     const [showRegisterModal, setShowRegisterModal] = useState(false);
+    const noticeModalRef = useRef(null);
 
     useEffect(() => {
         if (selectedNotice) {
@@ -119,7 +120,7 @@ export default function Welcome({ auth, notices }) {
                             </motion.div>
                         )}
 
-                        {auth?.user?.role === "judge" && (        
+                        {auth?.user?.role === "judge" && (
                             <motion.div
                                 className="bg-indigo-100 p-4 rounded shadow hover:bg-indigo-200 text-center flex flex-col items-center justify-center h-28 cursor-pointer"
                                 whileHover={{
@@ -191,7 +192,14 @@ export default function Welcome({ auth, notices }) {
                     {selectedNotice && (
                         <div
                             className="fixed inset-0 z-50 flex items-center justify-center p-4"
-                            onClick={() => setSelectedNotice(null)}
+                            onMouseDown={(e) => {
+                                if (
+                                    noticeModalRef.current &&
+                                    !noticeModalRef.current.contains(e.target)
+                                ) {
+                                    setSelectedNotice(null);
+                                }
+                            }}
                         >
                             {/* 背景模糊遮罩 */}
                             <motion.div
@@ -203,11 +211,11 @@ export default function Welcome({ auth, notices }) {
 
                             {/* 彈窗內容 */}
                             <motion.div
+                                ref={noticeModalRef}
                                 className="relative z-10 bg-white dark:bg-zinc-800 p-6 rounded shadow-lg max-w-2xl w-full"
                                 initial={{ opacity: 0, scale: 0.95 }}
                                 animate={{ opacity: 1, scale: 1 }}
                                 exit={{ opacity: 0, scale: 0.95 }}
-                                onClick={(e) => e.stopPropagation()}
                             >
                                 <button
                                     className="absolute top-2 right-2 text-gray-400 hover:text-gray-600 dark:hover:text-white text-xl"
