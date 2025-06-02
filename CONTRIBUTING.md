@@ -93,6 +93,8 @@ php artisan migrate
 # 8. 啟動 Laravel + React 開發伺服器
 php artisan serve              # 啟動後端
 npm run dev                    # 啟動前端
+
+php artisan migrate:refresh --seed
 ```
 
 ## 開發規範
