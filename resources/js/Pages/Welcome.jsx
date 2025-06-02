@@ -73,7 +73,7 @@ export default function Welcome({ auth, notices }) {
                     <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 text-center">
                         {auth?.user?.role && (
                             <motion.div
-                                className="bg-indigo-100 p-4 rounded shadow hover:bg-indigo-200 text-center flex flex-col items-center justify-center h-28 cursor-pointer"
+                                className="bg-amber-200 p-4 rounded shadow hover:bg-amber-300 text-center flex flex-col items-center justify-center h-28 cursor-pointer"
                                 whileHover={{
                                     rotateY: 360,
                                     transition: {
@@ -109,7 +109,7 @@ export default function Welcome({ auth, notices }) {
 
                         {auth?.user?.role === "admin" && (
                             <motion.div
-                                className="bg-indigo-100 p-4 rounded shadow hover:bg-indigo-200 text-center flex flex-col items-center justify-center h-28 cursor-pointer"
+                                className="bg-amber-200 p-4 rounded shadow hover:bg-amber-300 text-center flex flex-col items-center justify-center h-28 cursor-pointer"
                                 whileHover={{
                                     rotateY: 360,
                                     transition: {
@@ -155,12 +155,12 @@ export default function Welcome({ auth, notices }) {
                     {/* 最新公告區塊 */}
                     <motion.section
                         id="announcements"
-                        className="bg-indigo-50 dark:bg-zinc-900 rounded-lg p-6 shadow"
+                        className="bg-indigo-300 dark:bg-zinc-900 rounded-lg p-6 shadow"
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5 }}
                     >
-                        <h2 className="text-2xl font-bold mb-4 text-indigo-700 dark:text-white">
+                        <h2 className="text-2xl font-bold mb-4 text-indigo-800 dark:text-white">
                             最新公告
                         </h2>
 

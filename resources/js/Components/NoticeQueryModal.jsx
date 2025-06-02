@@ -1,16 +1,13 @@
 import { useEffect, useRef, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useAnimation } from "framer-motion";
 
-export default function NoticeQueryModal({
-    notices,
-    isOpen,
-    onClose,
-    onSelect,
-}) {
+export default function NoticeQueryModal({ notices, isOpen, onClose }) {
     const [search, setSearch] = useState("");
     const [filterYear, setFilterYear] = useState("all");
+    const [selectedNotice, setSelectedNotice] = useState(null);
 
     const modalRef = useRef(null);
+    const controls = useAnimation();
 
     useEffect(() => {
         const handleKeyDown = (e) => {
@@ -25,12 +22,30 @@ export default function NoticeQueryModal({
             document.body.style.overflow = "hidden";
         } else {
             document.body.style.overflow = "";
+            setSelectedNotice(null);
         }
-
         return () => {
             document.body.style.overflow = "";
         };
     }, [isOpen]);
+
+    useEffect(() => {
+        if (selectedNotice) {
+            controls.set({ x: 0 });
+
+            const timer = setTimeout(() => {
+                controls.start({
+                    x: [-2, 2, -2, 2, -2, 2],
+                    transition: {
+                        duration: 1.2,
+                        ease: "easeInOut",
+                    },
+                });
+            }, 2000);
+
+            return () => clearTimeout(timer);
+        }
+    }, [selectedNotice, controls]);
 
     const handleBackdropClick = (e) => {
         if (modalRef.current && !modalRef.current.contains(e.target)) {
@@ -87,77 +102,128 @@ export default function NoticeQueryModal({
                             公告查詢
                         </h2>
 
-                        <div className="flex gap-2 mb-4">
-                            <input
-                                type="text"
-                                value={search}
-                                onChange={(e) => setSearch(e.target.value)}
-                                placeholder="輸入關鍵字搜尋"
-                                className="flex-1 p-2 border rounded"
-                            />
-                            <select
-                                value={filterYear}
-                                onChange={(e) => setFilterYear(e.target.value)}
-                                className="p-2 pr-8 border rounded appearance-none"
-                            >
-                                <option value="all">全部年份</option>
-                                {yearOptions.map((y) => (
-                                    <option key={y} value={y}>
-                                        {y}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-
-                        <motion.ul
-                            layout
-                            transition={{
-                                type: "spring",
-                                stiffness: 300,
-                                damping: 30,
-                            }}
-                            className="space-y-2"
-                        >
-                            {filtered.map((notice) => (
-                                <motion.li
-                                    layout
-                                    key={notice.id}
-                                    className="bg-yellow-100 dark:bg-zinc-700 p-4 rounded cursor-pointer hover:bg-yellow-200 dark:hover:bg-zinc-600"
-                                    onClick={() => {
-                                        onSelect(notice);
-                                        onClose();
-                                    }}
-                                    initial={{ opacity: 0, y: 20 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    exit={{ opacity: 0, y: -20 }}
-                                    transition={{
-                                        duration: 0.3,
-                                        ease: "easeOut",
-                                    }}
-                                    whileHover={{
-                                        scale: 1.05,
-                                        boxShadow:
-                                            "0 6px 24px rgba(0,0,0,0.15)",
-                                        transition: {
-                                            type: "spring",
-                                            stiffness: 300,
-                                            damping: 18,
-                                        },
-                                    }}
-                                    whileTap={{ scale: 0.96 }}
+                        {!selectedNotice && (
+                            <div className="flex gap-2 mb-4">
+                                <input
+                                    type="text"
+                                    value={search}
+                                    onChange={(e) => setSearch(e.target.value)}
+                                    placeholder="輸入關鍵字搜尋"
+                                    className="flex-1 p-2 border rounded"
+                                />
+                                <select
+                                    value={filterYear}
+                                    onChange={(e) =>
+                                        setFilterYear(e.target.value)
+                                    }
+                                    className="p-2 pr-8 border rounded appearance-none"
                                 >
-                                    <h3 className="text-zinc-700 font-semibold text-base dark:text-white hover:underline">
-                                        {notice.title}
+                                    <option value="all">全部年份</option>
+                                    {yearOptions.map((y) => (
+                                        <option key={y} value={y}>
+                                            {y}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                        )}
+
+                        <AnimatePresence mode="wait">
+                            {selectedNotice ? (
+                                <motion.div
+                                    key="detail"
+                                    layout
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, y: -10 }}
+                                    transition={{ duration: 0.3 }}
+                                    className="bg-yellow-100 dark:bg-zinc-700 p-4 rounded shadow"
+                                >
+                                    <h3 className="text-xl font-bold mb-2 text-zinc-800 dark:text-white">
+                                        {selectedNotice.title}
                                     </h3>
-                                    <p className="text-sm text-gray-600 dark:text-gray-300">
+                                    <p className="text-sm text-gray-500 dark:text-gray-300 mb-4">
                                         發布日期：
                                         {new Date(
-                                            notice.created_at
+                                            selectedNotice.created_at
                                         ).toLocaleDateString()}
                                     </p>
-                                </motion.li>
-                            ))}
-                        </motion.ul>
+                                    <p className="text-zinc-700 dark:text-zinc-200 whitespace-pre-wrap">
+                                        {selectedNotice.content}
+                                    </p>
+
+                                    <motion.button
+                                        onClick={() => setSelectedNotice(null)}
+                                        className="mt-6 text-sm text-indigo-600 flex items-center gap-1"
+                                        animate={controls}
+                                        whileHover={{
+                                            scale: 1.05,
+                                            transition: {
+                                                type: "spring",
+                                                stiffness: 300,
+                                                damping: 20,
+                                            },
+                                        }}
+                                        whileTap={{ scale: 0.95 }}
+                                    >
+                                        <span className="text-lg">←</span>
+                                        <span className="hover:underline">
+                                            返回公告列表
+                                        </span>
+                                    </motion.button>
+                                </motion.div>
+                            ) : (
+                                <motion.ul
+                                    key="list"
+                                    layout
+                                    transition={{
+                                        type: "spring",
+                                        stiffness: 300,
+                                        damping: 30,
+                                    }}
+                                    className="space-y-2"
+                                >
+                                    {filtered.map((notice) => (
+                                        <motion.li
+                                            layout
+                                            key={notice.id}
+                                            className="bg-yellow-100 dark:bg-zinc-700 p-4 rounded cursor-pointer hover:bg-yellow-200 dark:hover:bg-zinc-600"
+                                            onClick={() =>
+                                                setSelectedNotice(notice)
+                                            }
+                                            initial={{ opacity: 0, y: 20 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            exit={{ opacity: 0, y: -20 }}
+                                            transition={{
+                                                duration: 0.3,
+                                                ease: "easeOut",
+                                            }}
+                                            whileHover={{
+                                                scale: 1.05,
+                                                boxShadow:
+                                                    "0 6px 24px rgba(0,0,0,0.15)",
+                                                transition: {
+                                                    type: "spring",
+                                                    stiffness: 300,
+                                                    damping: 18,
+                                                },
+                                            }}
+                                            whileTap={{ scale: 0.96 }}
+                                        >
+                                            <h3 className="text-zinc-700 font-semibold text-base dark:text-white hover:underline">
+                                                {notice.title}
+                                            </h3>
+                                            <p className="text-sm text-gray-600 dark:text-gray-300">
+                                                發布日期：
+                                                {new Date(
+                                                    notice.created_at
+                                                ).toLocaleDateString()}
+                                            </p>
+                                        </motion.li>
+                                    ))}
+                                </motion.ul>
+                            )}
+                        </AnimatePresence>
                     </motion.div>
                 </motion.div>
             )}
