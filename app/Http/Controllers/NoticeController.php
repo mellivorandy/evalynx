@@ -25,7 +25,7 @@ class NoticeController extends Controller
             $query->whereMonth('created_at', $month);
         }
 
-        $notices = $query->orderBy('created_at', 'desc')->get();
+        $notices = $query->orderBy('created_at', 'desc')->paginate(5);
 
         return Inertia::render('NoticeIndex', [
             'notices' => $notices,

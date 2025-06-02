@@ -5,7 +5,7 @@ import LoginModal from "@/Components/LoginModal";
 import RegisterModal from "@/Components/RegisterModal";
 import NoticeQueryModal from "@/Components/NoticeQueryModal";
 import SidePanel from "@/Components/SidePanel";
-import { Head, Link } from "@inertiajs/react";
+import { Head, Link, router } from "@inertiajs/react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function Welcome({ auth, notices }) {
@@ -14,6 +14,7 @@ export default function Welcome({ auth, notices }) {
     const [showLoginModal, setShowLoginModal] = useState(false);
     const [showRegisterModal, setShowRegisterModal] = useState(false);
     const noticeModalRef = useRef(null);
+    const [pageDirection, setPageDirection] = useState(0);
 
     useEffect(() => {
         if (selectedNotice) {
@@ -28,6 +29,14 @@ export default function Welcome({ auth, notices }) {
         window.addEventListener("keydown", esc);
         return () => window.removeEventListener("keydown", esc);
     }, [selectedNotice]);
+
+    const handlePageChange = (newPage) => {
+        setPageDirection(newPage > notices.current_page ? 1 : -1);
+        router.visit(`/?page=${newPage}#announcements`, {
+            preserveScroll: true,
+            preserveState: true,
+        });
+    };
 
     return (
         <>
@@ -154,40 +163,136 @@ export default function Welcome({ auth, notices }) {
                         <h2 className="text-2xl font-bold mb-4 text-indigo-700 dark:text-white">
                             最新公告
                         </h2>
-                        <ul className="space-y-2">
-                            {notices.map((notice) => (
-                                <motion.li
-                                    key={notice.id}
-                                    className="bg-white dark:bg-zinc-800 p-4 rounded-md shadow-sm border border-gray-200 dark:border-zinc-700 cursor-pointer"
-                                    onClick={() => setSelectedNotice(notice)}
-                                    whileHover={{
-                                        scale: 1.03,
-                                        boxShadow:
-                                            "0 4px 20px rgba(0, 0, 0, 0.1)",
+
+                        <AnimatePresence mode="wait">
+                            <motion.ul
+                                key={notices.current_page}
+                                className="space-y-2"
+                                initial={{
+                                    x: pageDirection > 0 ? 300 : -300,
+                                    opacity: 0,
+                                }}
+                                animate={{ x: 0, opacity: 1 }}
+                                exit={{
+                                    x: pageDirection > 0 ? -300 : 300,
+                                    opacity: 0,
+                                }}
+                                transition={{
+                                    duration: 0.4,
+                                    ease: "easeInOut",
+                                }}
+                            >
+                                {notices.data.map((notice, index) => (
+                                    <motion.li
+                                        key={notice.id}
+                                        className="bg-white dark:bg-zinc-800 p-4 rounded-md shadow-sm border border-gray-200 dark:border-zinc-700 cursor-pointer"
+                                        onClick={() =>
+                                            setSelectedNotice(notice)
+                                        }
+                                        initial={{
+                                            x: pageDirection > 0 ? 100 : -100,
+                                            opacity: 0,
+                                        }}
+                                        animate={{
+                                            x: 0,
+                                            opacity: 1,
+                                        }}
+                                        exit={{
+                                            x: pageDirection > 0 ? -100 : 100,
+                                            opacity: 0,
+                                        }}
+                                        transition={{
+                                            duration: 0.35,
+                                            delay: index * 0.05,
+                                            ease: "easeOut",
+                                        }}
+                                        whileHover={{
+                                            scale: 1.05,
+                                            boxShadow:
+                                                "0 6px 24px rgba(0,0,0,0.15)",
+                                            transition: {
+                                                type: "spring",
+                                                stiffness: 300,
+                                                damping: 18,
+                                            },
+                                        }}
+                                        whileTap={{ scale: 0.96 }}
+                                    >
+                                        <h3 className="text-blue-600 font-semibold text-base hover:underline">
+                                            {notice.title}
+                                        </h3>
+                                        <p className="text-sm text-gray-500 dark:text-gray-400">
+                                            {new Date(
+                                                notice.created_at
+                                            ).toLocaleDateString()}
+                                        </p>
+                                    </motion.li>
+                                ))}
+                            </motion.ul>
+                        </AnimatePresence>
+
+                        {notices.last_page > 1 && (
+                            <div className="flex justify-center items-center gap-4 mt-6">
+                                <motion.button
+                                    onClick={() =>
+                                        handlePageChange(
+                                            notices.current_page - 1
+                                        )
+                                    }
+                                    disabled={!notices.prev_page_url}
+                                    className="px-4 py-2 rounded-md font-semibold text-white disabled:opacity-35 shadow-md"
+                                    style={{
+                                        backgroundColor: "#fca503",
                                     }}
+                                    whileHover={{
+                                        scale: 1.08,
+                                        backgroundColor: "#ec8f00",
+                                        boxShadow:
+                                            "0px 4px 12px rgba(0,0,0,0.2)",
+                                    }}
+                                >
+                                    &lt; 上一頁
+                                </motion.button>
+
+                                <span className="text-lg font-medium text-black-700 dark:text-white">
+                                    第 {notices.current_page} 頁 / 共{" "}
+                                    {notices.last_page} 頁
+                                </span>
+
+                                <motion.button
+                                    onClick={() =>
+                                        handlePageChange(
+                                            notices.current_page + 1
+                                        )
+                                    }
+                                    disabled={!notices.next_page_url}
+                                    className="px-4 py-2 rounded-md font-semibold text-white disabled:opacity-35 shadow-md"
+                                    style={{
+                                        backgroundColor: "#fca503",
+                                    }}
+                                    whileHover={{
+                                        scale: 1.08,
+                                        backgroundColor: "#ec8f00",
+                                        boxShadow:
+                                            "0px 4px 12px rgba(0,0,0,0.2)",
+                                    }}
+                                    whileTap={{ scale: 0.95 }}
                                     transition={{
                                         type: "spring",
-                                        stiffness: 300,
+                                        stiffness: 250,
                                         damping: 15,
                                     }}
                                 >
-                                    <h3 className="text-blue-600 font-semibold text-base hover:underline">
-                                        {notice.title}
-                                    </h3>
-                                    <p className="text-sm text-gray-500 dark:text-gray-400">
-                                        {new Date(
-                                            notice.created_at
-                                        ).toLocaleDateString()}
-                                    </p>
-                                </motion.li>
-                            ))}
-                        </ul>
+                                    下一頁 &gt;
+                                </motion.button>
+                            </div>
+                        )}
                     </motion.section>
                 </main>
 
                 <Footer />
 
-                {/* 模態公告視窗 */}
+                {/* 模糊公告視窗 */}
                 <AnimatePresence>
                     {selectedNotice && (
                         <div
@@ -223,7 +328,6 @@ export default function Welcome({ auth, notices }) {
                                 >
                                     &times;
                                 </button>
-
                                 <h2 className="text-xl font-bold mb-2">
                                     {selectedNotice.title}
                                 </h2>
@@ -251,7 +355,7 @@ export default function Welcome({ auth, notices }) {
                 />
 
                 <NoticeQueryModal
-                    notices={notices}
+                    notices={notices.data}
                     isOpen={showNoticeModal}
                     onClose={() => setShowNoticeModal(false)}
                     onSelect={(notice) => setSelectedNotice(notice)}
