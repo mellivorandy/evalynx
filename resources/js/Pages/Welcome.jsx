@@ -126,6 +126,7 @@ export default function Welcome({ auth, notices }) {
                         )}
 
                         {auth?.user?.role === "judge" && (
+                            
                             <motion.div
                                 className="bg-indigo-100 p-4 rounded shadow hover:bg-indigo-200 text-center flex flex-col items-center justify-center h-28 cursor-pointer"
                                 whileHover={{
@@ -138,14 +139,45 @@ export default function Welcome({ auth, notices }) {
                                 style={{ transformStyle: "preserve-3d" }}
                                 onClick={() => setShowNoticeModal(true)}
                             >
+                                
                                 <h2 className="font-semibold text-lg">
                                     評審專區
                                 </h2>
+                               
                                 <p className="text-sm text-gray-600">
-                                    填寫與查閱評分資料
+                                    查看作品
                                 </p>
                             </motion.div>
+                             
+
+                             
                         )}
+                        {auth?.user?.role === "judge" && (
+                           <Link href={"/judges" }> 
+                           <motion.div
+                                className="bg-amber-100 p-4 rounded shadow hover:bg-amber-300 text-center flex flex-col items-center justify-center h-28 cursor-pointer"
+                                whileHover={{
+                                    rotateY: 360,
+                                    transition: {
+                                        duration: 0.8,
+                                        ease: "easeInOut",
+                                    },
+                                }}
+                                style={{ transformStyle: "preserve-3d" }}
+
+                            >
+                                
+                                
+                                <h2 className="font-semibold text-lg">
+                                    評審專區
+                                </h2>
+                               
+                                <p className="text-sm text-gray-600">
+                                    填寫評分
+                                </p>
+                            </motion.div>
+                            </Link>
+                        )}    
                     </section>
 
                     {/* 最新公告區塊 */}
