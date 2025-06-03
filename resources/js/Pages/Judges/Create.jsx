@@ -6,6 +6,12 @@ import Footer from "@/Components/Footer";
 import SidePanel from "@/Components/SidePanel";
 
 const SCORE_FIELDS = ['score1', 'score2', 'score3', 'score4'];
+const SCORE_LABELS = {
+  score1: '創意與構想',
+  score2: '技術實作與程式碼品質',
+  score3: '美術設計與使用體驗',
+  score4: '完整度與展示效果',
+};
 
 export default function JudgeForm({ auth, projects = [], teams = [] }) {
   const { data, setData, post, processing, errors, reset } = useForm({
@@ -120,16 +126,6 @@ export default function JudgeForm({ auth, projects = [], teams = [] }) {
               />
             </div>
           )}
-          <div>
-            <label className="block mb-1 font-medium">描述</label>
-            <textarea
-              name="description"
-              value={data.description}
-              onChange={handleChange}
-              className="w-full border rounded px-2 py-1 dark:text-black"
-              rows={2}
-            />
-          </div>
           <div className="flex items-center space-x-2">
             <input
               type="checkbox"
@@ -143,7 +139,9 @@ export default function JudgeForm({ auth, projects = [], teams = [] }) {
           <div className="grid grid-cols-2 gap-4">
             {SCORE_FIELDS.map((key, idx) => (
               <div key={key}>
-                <label className="block mb-1 font-medium">評分 {idx + 1} <span className="text-red-500">*</span></label>
+                <label className="block mb-1 font-medium">
+                  {SCORE_LABELS[key]} <span className="text-red-500">*</span>
+                </label>
                 <input
                   type="number"
                   name={key}
@@ -160,6 +158,16 @@ export default function JudgeForm({ auth, projects = [], teams = [] }) {
           </div>
           <div className="text-right font-bold text-lg">
             總分：{total} / 100
+          </div>
+          <div>
+            <label className="block mb-1 font-medium">評論</label>
+            <textarea
+              name="description"
+              value={data.description}
+              onChange={handleChange}
+              className="w-full border rounded px-2 py-1 dark:text-black"
+              rows={2}
+            />
           </div>
           <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700" disabled={processing}>
             送出評分
