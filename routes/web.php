@@ -20,7 +20,12 @@ Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-
+Route::get('/judges', [JudgeController::class, 'index'])->name('judges');
+Route::get('/judges/create', [JudgeController::class, 'create'])->name('judges.create');
+Route::post('/scores', [JudgeController::class, 'store'])->name('scores.store');
+Route::post('/edit', [JudgeController::class, 'edit'])->name('scores.edit');
+Route::post('/judge', [JudgeController::class, 'apiStore']);
+Route::resource('judges', JudgeController::class);
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

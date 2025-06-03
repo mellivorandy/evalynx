@@ -2,6 +2,9 @@ import React from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link, usePage } from '@inertiajs/react';
 
+
+
+
 export default function Index({ auth, judges }) { // judges prop 應包含新的 score 欄位
     const { flash } = usePage().props;
 
@@ -44,14 +47,7 @@ export default function Index({ auth, judges }) { // judges prop 應包含新的
                                 >
                                     新增評審項目/評分
                                 </Link>
-                                {/* 如果您有一個單獨的評分頁面，可以保留這個連結
-                                <Link
-                                    href={route('judges.scoringForm')} // 確保路由名稱正確
-                                    className="px-4 py-2 bg-green-500 hover:bg-green-700 text-white font-semibold rounded-lg shadow-md"
-                                >
-                                    前往評分專區
-                                </Link>
-                                */}
+                                {}
                             </div>
 
                             {judges && judges.length > 0 ? (
@@ -62,6 +58,7 @@ export default function Index({ auth, judges }) { // judges prop 應包含新的
                                                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">ID</th>
                                                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">標題</th>
                                                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">描述</th>
+                                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">隊伍名稱</th>
                                                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Score1</th>
                                                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Score2</th>
                                                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Score3</th>
@@ -78,6 +75,7 @@ export default function Index({ auth, judges }) { // judges prop 應包含新的
                                                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">{judge.id}</td>
                                                     <td className="px-6 py-4 whitespace-nowrap text-sm">{judge.title}</td>
                                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{judge.description ? judge.description.substring(0, 30) + (judge.description.length > 30 ? '...' : '') : 'N/A'}</td>
+                                                    <td className="px-6 py-4 whitespace-nowrap text-sm">{judge.team_name}</td>
                                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-center">{judge.score1 ?? 'N/A'}</td>
                                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-center">{judge.score2 ?? 'N/A'}</td>
                                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-center">{judge.score3 ?? 'N/A'}</td>

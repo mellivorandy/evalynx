@@ -28,6 +28,7 @@ class JudgeController extends Controller
         $validatedData = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
+            'team_name' => 'nullable|string',
             'completed' => 'nullable|boolean',
             'score1' => 'nullable|integer|min:0', 
             'score2' => 'nullable|integer|min:0',
@@ -67,6 +68,7 @@ class JudgeController extends Controller
         $validatedData = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
+            'team_name' => 'nullable|string',
             'completed' => 'nullable|boolean',
             'score1' => 'nullable|integer|min:0',
             'score2' => 'nullable|integer|min:0',

@@ -17,6 +17,7 @@ class Judge extends Model // 確保類名是 Judge
     protected $fillable = [
         'title',
         'description',
+        'team_name' ,
         'completed',
         'score1',
         'score2', 

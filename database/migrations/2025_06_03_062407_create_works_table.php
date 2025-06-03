@@ -11,16 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('judges', function (Blueprint $table) {
+        Schema::create('works', function (Blueprint $table) {
             $table->id();
             $table->string('title');
+            $table->string('team_name')->nullable();
+            $table->year('year');
             $table->text('description')->nullable();
-            $table->string('team_name')->nullable(); 
-            $table->boolean('completed')->default(false);
-            $table->integer('score1'); 
-            $table->integer('score2');
-            $table->integer('score3');
-            $table->integer('score4');
+            $table->string('url')->nullable();
             $table->timestamps();
         });
     }
@@ -30,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('judges');
+        Schema::dropIfExists('works');
     }
 };
