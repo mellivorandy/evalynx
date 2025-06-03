@@ -1,11 +1,12 @@
 <?php
-
+use App\Http\Controllers\WorksController;
 use App\Http\Controllers\JudgeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\NoticeController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -37,5 +38,9 @@ Route::get('/notices', function () {
         'notices' => \App\Models\Notice::orderBy('created_at', 'desc')->paginate(5),
     ]);
 });
+
+Route::get('/works', [WorksController::class, 'index'])->name('works.index');
+
+
 
 require __DIR__.'/auth.php';
