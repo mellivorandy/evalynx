@@ -85,7 +85,7 @@ export default function ForgotPasswordModal({ isOpen, onClose, status }) {
 
                         <h2 className="text-xl font-bold mb-4">重設密碼</h2>
 
-                        <div className="mb-4 text-sm text-gray-600">
+                        <div className="mb-4 text-sm text-gray-600 dark:text-gray-300">
                             忘記密碼了嗎？別擔心。只要提供你的電子郵件地址，我們會
                             寄送一封密碼重設連結給你，讓你可以建立一組新的密碼。
                         </div>

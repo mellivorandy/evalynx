@@ -46,7 +46,7 @@ export default function JudgeForm({ auth }) {
       <Header auth={auth} />
       <SidePanel auth={auth} />
       <main className="max-w-6xl mx-auto px-4 py-8 space-y-12">
-        <form onSubmit={handleSubmit} className="max-w-lg mx-auto p-6 bg-white rounded shadow space-y-6">
+        <form onSubmit={handleSubmit} className="max-w-lg mx-auto p-6 bg-white dark:bg-zinc-700 rounded shadow space-y-6">
           <h2 className="text-xl font-bold mb-4">評審成績填寫</h2>
           <div>
             <label className="block mb-1 font-medium">標題 <span className="text-red-500">*</span></label>
@@ -55,7 +55,7 @@ export default function JudgeForm({ auth }) {
               name="title"
               value={data.title}
               onChange={handleChange}
-              className="w-full border rounded px-2 py-1"
+              className="w-full border rounded px-2 py-1 dark:text-black"
               required
             />
             {errors.title && <div className="text-red-500 text-sm">{errors.title}</div>}
@@ -66,7 +66,7 @@ export default function JudgeForm({ auth }) {
               name="description"
               value={data.description}
               onChange={handleChange}
-              className="w-full border rounded px-2 py-1"
+              className="w-full border rounded px-2 py-1 dark:text-black"
               rows={2}
             />
           </div>
@@ -77,7 +77,7 @@ export default function JudgeForm({ auth }) {
               name="team_name"
               value={data.team_name}
               onChange={handleChange}
-              className="w-full border rounded px-2 py-1"
+              className="w-full border rounded px-2 py-1 dark:text-black"
               required
             />
             {errors.team_name && <div className="text-red-500 text-sm">{errors.team_name}</div>}
@@ -103,7 +103,7 @@ export default function JudgeForm({ auth }) {
                   onChange={handleChange}
                   min={0}
                   max={25}
-                  className="w-full border rounded px-2 py-1"
+                  className="w-full border rounded px-2 py-1 dark:text-black"
                   required
                 />
                 {errors[key] && <div className="text-red-500 text-sm">{errors[key]}</div>}

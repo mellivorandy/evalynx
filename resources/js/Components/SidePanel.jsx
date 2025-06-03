@@ -11,6 +11,15 @@ export default function SidePanel({ auth }) {
         document.documentElement.classList.toggle("dark", darkMode);
     }, []);
 
+    useEffect(() => {
+        if (window.location.hash) {
+            const el = document.querySelector(window.location.hash);
+            if (el) {
+                el.scrollIntoView({ behavior: "smooth" });
+            }
+        }
+    }, []);
+
     const toggleTheme = () => {
         const newTheme = !isDark;
         setIsDark(newTheme);
@@ -23,7 +32,7 @@ export default function SidePanel({ auth }) {
             <div className="bg-[#81D8D0] text-white w-16 hover:w-52 transition-all duration-300 overflow-visible shadow-lg flex flex-col h-full py-4 group">
                 <div className="flex flex-col items-start space-y-4 flex-grow">
                     <Link
-                        href="#welcome"
+                        href="/"
                         className="flex items-center w-full px-4 py-2 hover:bg-indigo-600"
                     >
                         <img
