@@ -158,7 +158,7 @@ export default function LoginModal({ isOpen, onClose, canResetPassword }) {
                                             )
                                         }
                                     />
-                                    <span className="ml-2 text-sm text-gray-600">
+                                    <span className="ml-2 text-sm text-gray-600 dark:text-gray-300">
                                         記住我
                                     </span>
                                 </div>
@@ -168,7 +168,7 @@ export default function LoginModal({ isOpen, onClose, canResetPassword }) {
                                         <button
                                             type="button"
                                             onClick={handleForgotClick}
-                                            className="text-sm text-gray-500 hover:underline"
+                                            className="text-sm text-gray-500 dark:text-gray-300 hover:underline dark:hover:text-white"
                                         >
                                             忘記密碼？
                                         </button>

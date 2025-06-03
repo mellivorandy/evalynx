@@ -184,7 +184,7 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }) {
                                 <button
                                     type="button"
                                     onClick={onSwitchToLogin}
-                                    className="text-sm text-gray-600 underline hover:text-gray-900"
+                                    className="text-sm text-gray-600 underline dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
                                 >
                                     已經擁有帳號？
                                 </button>
