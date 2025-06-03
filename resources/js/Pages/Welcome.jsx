@@ -126,7 +126,7 @@ export default function Welcome({ auth, notices }) {
                         )}
 
                         {auth?.user?.role === "judge" && (
-                            
+                            <Link href={"/works" }>
                             <motion.div
                                 className="bg-indigo-100 p-4 rounded shadow hover:bg-indigo-200 text-center flex flex-col items-center justify-center h-28 cursor-pointer"
                                 whileHover={{
@@ -137,7 +137,7 @@ export default function Welcome({ auth, notices }) {
                                     },
                                 }}
                                 style={{ transformStyle: "preserve-3d" }}
-                                onClick={() => setShowNoticeModal(true)}
+                                //onClick={() => setShowNoticeModal(true)}
                             >
                                 
                                 <h2 className="font-semibold text-lg">
@@ -148,7 +148,7 @@ export default function Welcome({ auth, notices }) {
                                     查看作品
                                 </p>
                             </motion.div>
-                             
+                            </Link> 
 
                              
                         )}
