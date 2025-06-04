@@ -1,7 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 
-use App\Models\Works;
+use App\Models\Project;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -9,7 +9,7 @@ class WorksController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Works::query();
+        $query = Project::query();
 
         if ($search = $request->input('search')) {
             $query->where('title', 'like', "%{$search}%");
