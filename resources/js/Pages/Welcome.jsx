@@ -137,7 +137,6 @@ export default function Welcome({ auth, notices }) {
                                     },
                                 }}
                                 style={{ transformStyle: "preserve-3d" }}
-                                //onClick={() => setShowNoticeModal(true)}
                             >
                                 
                                 <h2 className="font-semibold text-lg">

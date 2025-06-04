@@ -15,11 +15,11 @@ const SCORE_LABELS = {
 
 export default function JudgeForm({ auth, projects = [], teams = [] }) {
   const { data, setData, post, processing, errors, reset } = useForm({
-    id: '',        // 作品id，作為judge主鍵
-    team_id: '',   // 作品team_id
-    title: '',     // 作品title
+    id: '',
+    team_id: '',
+    title: '',
     description: '',
-    team_name: '', // 隊伍名稱
+    team_name: '',
     completed: false,
     score1: 0,
     score2: 0,
