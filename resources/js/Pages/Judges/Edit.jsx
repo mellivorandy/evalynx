@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useForm } from '@inertiajs/react';
-import Modal from '@/Components/Modal';
+import Modal from '..@/Components/Modal';
 
 const SCORE_FIELDS = ['score1', 'score2', 'score3', 'score4'];
 const SCORE_LABELS = {
