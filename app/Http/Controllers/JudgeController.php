@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 use App\Models\Project;
 use App\Models\Judge;
@@ -12,15 +11,18 @@ use App\Models\Team;
 class JudgeController extends Controller
 {
     public function index(): InertiaResponse
-    {
+{
+    $judges = Judge::orderBy('created_at', 'desc')->get();
+    $projects = Project::select('id', 'title', 'team_id')->get(); // 加上 team_id
+    $teams = Team::select('id', 'name')->get(); // 補上 teams
 
-        $judges = Judge::orderBy('created_at', 'desc')->get();
-        $projects = Project::select('id', 'title')->get();
-        return Inertia::render('Judges/Index', [
-            'judges' => $judges,
-            'projects' => $projects,
-        ]);
-    }
+    return Inertia::render('Judges/Index', [
+        'judges' => $judges,
+        'projects' => $projects,
+        'teams' => $teams,
+    ]);
+}
+
 
     public function create(): InertiaResponse
     {
@@ -65,14 +67,19 @@ class JudgeController extends Controller
         ]);
     }
 
+
     public function edit(Judge $judge): InertiaResponse
     {
-        $projects = Project::select('id', 'title')->get();
+        $projects = Project::select('id', 'team_id', 'title')->get();
+        $teams = Team::select('id', 'name')->get();
         return Inertia::render('Judges/Edit', [
             'judge' => $judge,
             'projects' => $projects,
-    ]);
+            'teams' => $teams,
+        ]);
     }
+
+
 
     public function update(Request $request, Judge $judge): RedirectResponse
     {
