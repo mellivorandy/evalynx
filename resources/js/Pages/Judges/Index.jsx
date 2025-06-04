@@ -3,7 +3,7 @@ import Header from "@/Components/Header";
 import Footer from "@/Components/Footer";
 import SidePanel from "@/Components/SidePanel";
 import { Head, Link, usePage, router } from '@inertiajs/react';
-import Modal from '@/components/Modal';
+import Modal from '@/Components/Modal';
 import { useForm } from '@inertiajs/react';
 import Edit from './Edit';
 
