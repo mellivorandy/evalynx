@@ -265,7 +265,11 @@ export default function Welcome({ auth, notices }) {
                                         )
                                     }
                                     disabled={!notices.prev_page_url}
-                                    className="px-4 py-2 rounded-md font-semibold text-white disabled:opacity-35 shadow-md"
+                                    className={`px-4 py-2 rounded-md font-semibold text-white shadow-md ${
+                                        !notices.prev_page_url
+                                            ? "cursor-not-allowed opacity-35"
+                                            : ""
+                                    }`}
                                     style={{
                                         backgroundColor: "#fca503",
                                     }}
@@ -291,7 +295,11 @@ export default function Welcome({ auth, notices }) {
                                         )
                                     }
                                     disabled={!notices.next_page_url}
-                                    className="px-4 py-2 rounded-md font-semibold text-white disabled:opacity-35 shadow-md"
+                                    className={`px-4 py-2 rounded-md font-semibold text-white shadow-md ${
+                                        !notices.next_page_url
+                                            ? "cursor-not-allowed opacity-35"
+                                            : ""
+                                    }`}
                                     style={{
                                         backgroundColor: "#fca503",
                                     }}
