@@ -1,4 +1,5 @@
 <?php
+
 use App\Http\Controllers\WorksController;
 use App\Http\Controllers\JudgeController;
 use App\Http\Controllers\ProfileController;
@@ -33,14 +34,19 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::get('/notices', function () {
-    return Inertia::render('Notices/Index', [
-        'notices' => \App\Models\Notice::orderBy('created_at', 'desc')->paginate(5),
-    ]);
-});
-
 Route::get('/works', [WorksController::class, 'index'])->name('works.index');
 
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/admin', function () {
+        return Inertia::render('Admin/Dashboard');
+    })->name('admin.dashboard');
 
+    Route::get('/admin/notices', [NoticeController::class, 'adminIndex'])->name('admin.notices.index');
+    Route::get('/notices/create', [NoticeController::class, 'create'])->name('notices.create');
+    Route::post('/notices', [NoticeController::class, 'store'])->name('notices.store');
+    Route::get('/notices/{notice}/edit', [NoticeController::class, 'edit'])->name('notices.edit');
+    Route::put('/notices/{notice}', [NoticeController::class, 'update'])->name('notices.update');
+    Route::delete('/notices/{notice}', [NoticeController::class, 'destroy'])->name('notices.destroy');
+});
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

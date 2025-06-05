@@ -83,7 +83,9 @@ export default function Welcome({ auth, notices }) {
                             style={{ transformStyle: "preserve-3d" }}
                             onClick={() => setShowNoticeModal(true)}
                         >
-                            <h2 className="font-semibold text-lg dark:text-black">公告查詢</h2>
+                            <h2 className="font-semibold text-lg dark:text-black">
+                                公告查詢
+                            </h2>
                             <p className="text-sm text-gray-600 dark:text-gray-900">
                                 查看最新比賽資訊
                             </p>
@@ -104,79 +106,75 @@ export default function Welcome({ auth, notices }) {
                         )}
 
                         {auth?.user?.role === "admin" && (
-                            <motion.div
-                                className="bg-amber-200 dark:bg-amber-500 p-4 rounded shadow hover:bg-amber-300 dark:hover:bg-amber-600 text-center flex flex-col items-center justify-center h-28 cursor-pointer"
-                                whileHover={{
-                                    rotateY: 360,
-                                    transition: {
-                                        duration: 0.8,
-                                        ease: "easeInOut",
-                                    },
-                                }}
-                                style={{ transformStyle: "preserve-3d" }}
-                                onClick={() => setShowNoticeModal(true)}
-                            >
-                                <h2 className="font-semibold text-lg dark:text-black">
-                                    管理員專區
-                                </h2>
-                                <p className="text-sm text-gray-600 dark:text-gray-900">
-                                    管理系統與公告
-                                </p>
-                            </motion.div>
-                        )}
-
-                        {auth?.user?.role === "judge" && (
-                            <Link href={"/works" }>
-                            <motion.div
-                                className="bg-indigo-100 p-4 rounded shadow hover:bg-indigo-200 text-center flex flex-col items-center justify-center h-28 cursor-pointer"
-                                whileHover={{
-                                    rotateY: 360,
-                                    transition: {
-                                        duration: 0.8,
-                                        ease: "easeInOut",
-                                    },
-                                }}
-                                style={{ transformStyle: "preserve-3d" }}
-                            >
-                                
-                                <h2 className="font-semibold text-lg">
-                                    評審專區
-                                </h2>
-                               
-                                <p className="text-sm text-gray-600">
-                                    查看作品
-                                </p>
-                            </motion.div>
-                            </Link> 
-
-                             
-                        )}
-                        {auth?.user?.role === "judge" && (
-                           <Link href={"/judges" }> 
-                           <motion.div
-                                className="bg-amber-100 p-4 rounded shadow hover:bg-amber-300 text-center flex flex-col items-center justify-center h-28 cursor-pointer"
-                                whileHover={{
-                                    rotateY: 360,
-                                    transition: {
-                                        duration: 0.8,
-                                        ease: "easeInOut",
-                                    },
-                                }}
-                                style={{ transformStyle: "preserve-3d" }}
-
-                            >
-                                
-                                
-                                <h2 className="font-semibold text-lg">
-                                    評審專區
-                                </h2>
-                               
-                                <p className="text-sm text-gray-600">
-                                    填寫評分
-                                </p>
-                            </motion.div>
+                            <Link href={route("admin.dashboard")}>
+                                <motion.div
+                                    className="bg-amber-200 dark:bg-amber-500 p-4 rounded shadow hover:bg-amber-300 dark:hover:bg-amber-600 text-center flex flex-col items-center justify-center h-28 cursor-pointer"
+                                    whileHover={{
+                                        rotateY: 360,
+                                        transition: {
+                                            duration: 0.8,
+                                            ease: "easeInOut",
+                                        },
+                                    }}
+                                    style={{ transformStyle: "preserve-3d" }}
+                                >
+                                    <h2 className="font-semibold text-lg dark:text-black">
+                                        管理員專區
+                                    </h2>
+                                    <p className="text-sm text-gray-600 dark:text-gray-900">
+                                        管理系統與公告
+                                    </p>
+                                </motion.div>
                             </Link>
-                        )}    
+                        )}
+
+                        {auth?.user?.role === "judge" && (
+                            <Link href={"/works"}>
+                                <motion.div
+                                    className="bg-indigo-100 p-4 rounded shadow hover:bg-indigo-200 text-center flex flex-col items-center justify-center h-28 cursor-pointer"
+                                    whileHover={{
+                                        rotateY: 360,
+                                        transition: {
+                                            duration: 0.8,
+                                            ease: "easeInOut",
+                                        },
+                                    }}
+                                    style={{ transformStyle: "preserve-3d" }}
+                                >
+                                    <h2 className="font-semibold text-lg">
+                                        評審專區
+                                    </h2>
+
+                                    <p className="text-sm text-gray-600">
+                                        查看作品
+                                    </p>
+                                </motion.div>
+                            </Link>
+                        )}
+
+                        {auth?.user?.role === "judge" && (
+                            <Link href={"/judges"}>
+                                <motion.div
+                                    className="bg-amber-100 p-4 rounded shadow hover:bg-amber-300 text-center flex flex-col items-center justify-center h-28 cursor-pointer"
+                                    whileHover={{
+                                        rotateY: 360,
+                                        transition: {
+                                            duration: 0.8,
+                                            ease: "easeInOut",
+                                        },
+                                    }}
+                                    style={{ transformStyle: "preserve-3d" }}
+                                >
+                                    <h2 className="font-semibold text-lg">
+                                        評審專區
+                                    </h2>
+
+                                    <p className="text-sm text-gray-600">
+                                        填寫評分
+                                    </p>
+                                </motion.div>
+                            </Link>
+                        )}
                     </section>
 
                     {/* 最新公告區塊 */}
