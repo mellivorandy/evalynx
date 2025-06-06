@@ -169,26 +169,6 @@ export default function NoticeQueryModal({
                             </div>
                         )}
 
-                        {isAdmin && selectedNotice && (
-                            <div className="flex gap-2 mt-4">
-                                <Link
-                                    href={route(
-                                        "notices.edit",
-                                        selectedNotice.id
-                                    )}
-                                    className="bg-yellow-400 text-white px-3 py-1 rounded"
-                                >
-                                    編輯
-                                </Link>
-                                <button
-                                    onClick={() => onDelete(selectedNotice.id)}
-                                    className="bg-red-500 text-white px-3 py-1 rounded"
-                                >
-                                    刪除
-                                </button>
-                            </div>
-                        )}
-
                         <AnimatePresence mode="wait">
                             {selectedNotice ? (
                                 <motion.div
@@ -198,8 +178,30 @@ export default function NoticeQueryModal({
                                     animate={{ opacity: 1, y: 0 }}
                                     exit={{ opacity: 0, y: -10 }}
                                     transition={{ duration: 0.3 }}
-                                    className="bg-yellow-100 dark:bg-zinc-700 p-4 rounded shadow"
+                                    className="relative bg-yellow-100 dark:bg-zinc-700 p-4 rounded shadow"
                                 >
+                                    {isAdmin && selectedNotice && (
+                                        <div className="absolute top-4 right-4 flex gap-2">
+                                            <Link
+                                                href={route(
+                                                    "notices.edit",
+                                                    selectedNotice.id
+                                                )}
+                                                className="bg-indigo-400 hover:bg-indigo-500 text-white px-3 py-1 rounded text-sm shadow"
+                                            >
+                                                編輯
+                                            </Link>
+                                            <button
+                                                onClick={() =>
+                                                    onDelete(selectedNotice.id)
+                                                }
+                                                className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm shadow"
+                                            >
+                                                刪除
+                                            </button>
+                                        </div>
+                                    )}
+
                                     <h3 className="text-xl font-bold mb-2 text-zinc-800 dark:text-white">
                                         {selectedNotice.title}
                                     </h3>
