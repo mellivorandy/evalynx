@@ -7,7 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class Judge extends Model
 {
     use HasFactory;
-
+    public $incrementing = false; // 關鍵：id 不是自增
+    protected $keyType = 'int';   // 關鍵：id 是整數
     // 對應 judges 資料表（如果不是預設命名才需要加這行）
     // protected $table = 'judges';
 

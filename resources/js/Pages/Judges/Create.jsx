@@ -61,6 +61,9 @@ export default function JudgeForm({ auth, projects = [], teams = [] }) {
     });
   };
 
+  // 取得目前選中的 project 物件
+  const selectedProject = projects.find((p) => String(p.id) === String(data.id));
+
   return (
     <div className="bg-gray-50 text-gray-800 dark:bg-black dark:text-white min-h-screen relative">
       <Header auth={auth} />
@@ -86,6 +89,42 @@ export default function JudgeForm({ auth, projects = [], teams = [] }) {
               ))}
             </select>
             {errors.id && <div className="text-red-500 text-sm">{errors.id}</div>}
+
+            {/* 作品連結區塊 */}
+            {selectedProject && (
+              <div className="flex flex-col gap-1 mt-3 ml-1">
+                {selectedProject.proposal_path && (
+                  <a
+                    href={selectedProject.proposal_path}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline underline-offset-2 font-medium transition rounded px-2 py-1"
+                  >
+                    <span role="img" aria-label="企劃書">📄</span> 企劃書下載
+                  </a>
+                )}
+                {selectedProject.poster_path && (
+                  <a
+                    href={selectedProject.poster_path}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline underline-offset-2 font-medium transition rounded px-2 py-1"
+                  >
+                    <span role="img" aria-label="海報">🖼️</span> 海報下載
+                  </a>
+                )}
+                {selectedProject.code_link && (
+                  <a
+                    href={selectedProject.code_link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline underline-offset-2 font-medium transition rounded px-2 py-1"
+                  >
+                    <span role="img" aria-label="原始碼">💻</span> 原始碼連結
+                  </a>
+                )}
+              </div>
+            )}
           </div>
           {/* 顯示已選作品的 team_id */}
           {data.team_id && (

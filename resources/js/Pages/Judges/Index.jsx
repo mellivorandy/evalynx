@@ -276,7 +276,6 @@ export default function Index({ auth, judges, projects = [], teams = [] }) {
                                                     </td>
                                                     <td className="px-3 py-2 whitespace-nowrap text-center text-gray-500 dark:text-gray-400">{new Date(judge.created_at).toLocaleDateString()}</td>
                                                     <td className="px-3 py-2 whitespace-nowrap text-right font-medium">
-                                                        <Link href={route('judges.show', judge.id)} className="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300 mr-3">查看</Link>
                                                         <button
                                                             className="text-yellow-600 hover:text-yellow-900 dark:text-yellow-400 dark:hover:text-yellow-300 mr-3"
                                                             onClick={() => openEditModal(judge)}
