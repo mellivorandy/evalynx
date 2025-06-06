@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, useMemo } from "react";
 import { AnimatePresence, motion, useAnimation } from "framer-motion";
-import { Link } from "@inertiajs/react";
+import { usePage } from "@inertiajs/react";
+import EditNoticeModal from "@/Components/EditNoticeModal";
 
 export default function NoticeQueryModal({
     notices,
@@ -14,18 +15,16 @@ export default function NoticeQueryModal({
     const [selectedNotice, setSelectedNotice] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
     const [searchScope, setSearchScope] = useState("title");
+    const [showEditModal, setShowEditModal] = useState(false);
+
+    const { flash } = usePage().props;
+    const [showFlash, setShowFlash] = useState(!!flash.success);
+    const [flashMessage, setFlashMessage] = useState("");
+
     const pageSize = 5;
 
     const modalRef = useRef(null);
     const controls = useAnimation();
-
-    useEffect(() => {
-        const handleKeyDown = (e) => {
-            if (e.key === "Escape") onClose();
-        };
-        window.addEventListener("keydown", handleKeyDown);
-        return () => window.removeEventListener("keydown", handleKeyDown);
-    }, [onClose]);
 
     useEffect(() => {
         if (isOpen) {
@@ -33,6 +32,8 @@ export default function NoticeQueryModal({
         } else {
             document.body.style.overflow = "";
             setSelectedNotice(null);
+            setShowFlash(false);
+            setFlashMessage("");
         }
         return () => {
             document.body.style.overflow = "";
@@ -42,20 +43,30 @@ export default function NoticeQueryModal({
     useEffect(() => {
         if (selectedNotice) {
             controls.set({ x: 0 });
-
             const timer = setTimeout(() => {
                 controls.start({
                     x: [-2, 2, -2, 2, -2, 2],
-                    transition: {
-                        duration: 1.2,
-                        ease: "easeInOut",
-                    },
+                    transition: { duration: 1.2, ease: "easeInOut" },
                 });
             }, 2000);
-
             return () => clearTimeout(timer);
         }
     }, [selectedNotice, controls]);
+
+    useEffect(() => {
+        if (flash.success) {
+            setFlashMessage(flash.success);
+            setShowFlash(true);
+
+            const hideTimer = setTimeout(() => setShowFlash(false), 3000);
+            const clearTimer = setTimeout(() => setFlashMessage(""), 3500);
+
+            return () => {
+                clearTimeout(hideTimer);
+                clearTimeout(clearTimer);
+            };
+        }
+    }, [flash.success]);
 
     const handleBackdropClick = (e) => {
         if (modalRef.current && !modalRef.current.contains(e.target)) {
@@ -86,6 +97,15 @@ export default function NoticeQueryModal({
         [notices]
     );
 
+    const handleSuccessMessage = (msg) => {
+        setFlashMessage(msg);
+        setShowFlash(true);
+        setSelectedNotice(null);
+
+        setTimeout(() => setShowFlash(false), 3000);
+        setTimeout(() => setFlashMessage(""), 3500);
+    };
+
     const totalPages = Math.ceil(filtered.length / pageSize);
     const paginatedNotices = useMemo(() => {
         const start = (currentPage - 1) * pageSize;
@@ -102,6 +122,25 @@ export default function NoticeQueryModal({
                     exit={{ opacity: 0 }}
                     onMouseDown={handleBackdropClick}
                 >
+                    <AnimatePresence>
+                        {showFlash && flashMessage && (
+                            <motion.div
+                                key="flash-notice"
+                                initial={{ opacity: 0, y: -10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: -10 }}
+                                transition={{ duration: 0.4 }}
+                                className="absolute left-2/5 -translate-x-1/2 top-4 z-50 px-4 py-2 rounded shadow border bg-green-100 border-green-400 text-green-800"
+                                style={{
+                                    maxWidth: "90%",
+                                    whiteSpace: "nowrap",
+                                }}
+                            >
+                                {flashMessage}
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+
                     <motion.div
                         layout
                         ref={modalRef}
@@ -180,17 +219,16 @@ export default function NoticeQueryModal({
                                     transition={{ duration: 0.3 }}
                                     className="relative bg-yellow-100 dark:bg-zinc-700 p-4 rounded shadow"
                                 >
-                                    {isAdmin && selectedNotice && (
+                                    {isAdmin && (
                                         <div className="absolute top-4 right-4 flex gap-2">
-                                            <Link
-                                                href={route(
-                                                    "notices.edit",
-                                                    selectedNotice.id
-                                                )}
-                                                className="bg-indigo-400 hover:bg-indigo-500 text-white px-3 py-1 rounded text-sm shadow"
+                                            <button
+                                                onClick={() =>
+                                                    setShowEditModal(true)
+                                                }
+                                                className="bg-indigo-500 hover:bg-indigo-600 text-white px-3 py-1 rounded text-sm shadow"
                                             >
                                                 編輯
-                                            </Link>
+                                            </button>
                                             <button
                                                 onClick={() =>
                                                     onDelete(selectedNotice.id)
@@ -201,8 +239,7 @@ export default function NoticeQueryModal({
                                             </button>
                                         </div>
                                     )}
-
-                                    <h3 className="text-xl font-bold mb-2 text-zinc-800 dark:text-white">
+                                    <h3 className="text-xl font-bold mb-2 dark:text-white">
                                         {selectedNotice.title}
                                     </h3>
                                     <p className="text-sm text-gray-500 dark:text-gray-300 mb-4">
@@ -295,8 +332,7 @@ export default function NoticeQueryModal({
                                                     )
                                                 }
                                                 disabled={currentPage === 1}
-                                                className={`px-3 py-1 border rounded transition 
-                                                ${
+                                                className={`px-3 py-1 border rounded transition ${
                                                     currentPage === 1
                                                         ? "bg-gray-200 text-gray-500 cursor-not-allowed"
                                                         : "hover:bg-indigo-100"
@@ -304,7 +340,6 @@ export default function NoticeQueryModal({
                                             >
                                                 &lt;
                                             </button>
-
                                             {[...Array(totalPages)].map(
                                                 (_, i) => (
                                                     <button
@@ -314,12 +349,12 @@ export default function NoticeQueryModal({
                                                                 i + 1
                                                             )
                                                         }
-                                                        className={`px-3 py-1 border rounded transition 
-                                                ${
-                                                    i + 1 === currentPage
-                                                        ? "bg-indigo-600 text-white"
-                                                        : "hover:bg-indigo-100"
-                                                }`}
+                                                        className={`px-3 py-1 border rounded transition ${
+                                                            i + 1 ===
+                                                            currentPage
+                                                                ? "bg-indigo-600 text-white"
+                                                                : "hover:bg-indigo-100"
+                                                        }`}
                                                     >
                                                         {i + 1}
                                                     </button>
@@ -338,8 +373,7 @@ export default function NoticeQueryModal({
                                                 disabled={
                                                     currentPage === totalPages
                                                 }
-                                                className={`px-3 py-1 border rounded transition 
-                                                ${
+                                                className={`px-3 py-1 border rounded transition ${
                                                     currentPage === totalPages
                                                         ? "bg-gray-200 text-gray-500 cursor-not-allowed"
                                                         : "hover:bg-indigo-100"
@@ -352,6 +386,14 @@ export default function NoticeQueryModal({
                                 </>
                             )}
                         </AnimatePresence>
+                        {selectedNotice && (
+                            <EditNoticeModal
+                                isOpen={showEditModal}
+                                notice={selectedNotice}
+                                onClose={() => setShowEditModal(false)}
+                                onSuccess={handleSuccessMessage}
+                            />
+                        )}
                     </motion.div>
                 </motion.div>
             )}

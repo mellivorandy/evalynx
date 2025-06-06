@@ -79,4 +79,26 @@ class NoticeController extends Controller
 
         return redirect()->route('admin.notices.index')->with('success', '公告新增成功！');
     }
+
+    public function edit(Notice $notice)
+    {
+        return Inertia::render('Admin/Notices/Edit', [
+            'notice' => $notice,
+        ]);
+    }
+
+    public function update(Request $request, Notice $notice)
+    {
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'content' => 'required|string',
+            'event_date' => 'nullable|date',
+            'prize' => 'nullable|string|max:255',
+            'rules' => 'nullable|string',
+        ]);
+
+        $notice->update($validated);
+
+        return back()->with('success', '公告已更新！');
+    }
 }
