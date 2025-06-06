@@ -15,6 +15,15 @@ export default function Welcome({ auth, notices }) {
     const [showRegisterModal, setShowRegisterModal] = useState(false);
     const noticeModalRef = useRef(null);
     const [pageDirection, setPageDirection] = useState(0);
+    const [allNotices, setAllNotices] = useState([]);
+
+    useEffect(() => {
+        if (showNoticeModal && allNotices.length === 0) {
+            fetch("/api/notices/all")
+                .then((res) => res.json())
+                .then((data) => setAllNotices(data));
+        }
+    }, [showNoticeModal]);
 
     useEffect(() => {
         if (selectedNotice) {
@@ -291,7 +300,11 @@ export default function Welcome({ auth, notices }) {
                                         )
                                     }
                                     disabled={!notices.prev_page_url}
-                                    className="px-4 py-2 rounded-md font-semibold text-white disabled:opacity-35 shadow-md"
+                                    className={`px-4 py-2 rounded-md font-semibold text-white shadow-md ${
+                                        !notices.prev_page_url
+                                            ? "cursor-not-allowed opacity-35"
+                                            : ""
+                                    }`}
                                     style={{
                                         backgroundColor: "#fca503",
                                     }}
@@ -317,7 +330,11 @@ export default function Welcome({ auth, notices }) {
                                         )
                                     }
                                     disabled={!notices.next_page_url}
-                                    className="px-4 py-2 rounded-md font-semibold text-white disabled:opacity-35 shadow-md"
+                                    className={`px-4 py-2 rounded-md font-semibold text-white shadow-md ${
+                                        !notices.next_page_url
+                                            ? "cursor-not-allowed opacity-35"
+                                            : ""
+                                    }`}
                                     style={{
                                         backgroundColor: "#fca503",
                                     }}
@@ -406,7 +423,7 @@ export default function Welcome({ auth, notices }) {
                 />
 
                 <NoticeQueryModal
-                    notices={notices.data}
+                    notices={allNotices}
                     isOpen={showNoticeModal}
                     onClose={() => setShowNoticeModal(false)}
                     onSelect={(notice) => setSelectedNotice(notice)}

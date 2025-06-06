@@ -1,10 +1,20 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useMemo } from "react";
 import { AnimatePresence, motion, useAnimation } from "framer-motion";
+import { Link } from "@inertiajs/react";
 
-export default function NoticeQueryModal({ notices, isOpen, onClose }) {
+export default function NoticeQueryModal({
+    notices,
+    isOpen,
+    onClose,
+    isAdmin = false,
+    onDelete = () => {},
+}) {
     const [search, setSearch] = useState("");
     const [filterYear, setFilterYear] = useState("all");
     const [selectedNotice, setSelectedNotice] = useState(null);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [searchScope, setSearchScope] = useState("title");
+    const pageSize = 5;
 
     const modalRef = useRef(null);
     const controls = useAnimation();
@@ -53,20 +63,34 @@ export default function NoticeQueryModal({ notices, isOpen, onClose }) {
         }
     };
 
-    const filtered = notices.filter((notice) => {
-        const year = new Date(notice.created_at).getFullYear().toString();
-        return (
-            (notice.title.includes(search) ||
-                notice.content.includes(search)) &&
-            (filterYear === "all" || year === filterYear)
-        );
-    });
+    const filtered = useMemo(() => {
+        return notices.filter((notice) => {
+            const year = new Date(notice.created_at).getFullYear().toString();
+            const inTitle = notice.title.includes(search);
+            const inContent = notice.content.includes(search);
+            const matchSearch =
+                searchScope === "all" ? inTitle || inContent : inTitle;
+            return matchSearch && (filterYear === "all" || year === filterYear);
+        });
+    }, [search, searchScope, filterYear, notices]);
 
-    const yearOptions = Array.from(
-        new Set(
-            notices.map((n) => new Date(n.created_at).getFullYear().toString())
-        )
+    const yearOptions = useMemo(
+        () =>
+            Array.from(
+                new Set(
+                    notices.map((n) =>
+                        new Date(n.created_at).getFullYear().toString()
+                    )
+                )
+            ),
+        [notices]
     );
+
+    const totalPages = Math.ceil(filtered.length / pageSize);
+    const paginatedNotices = useMemo(() => {
+        const start = (currentPage - 1) * pageSize;
+        return filtered.slice(start, start + pageSize);
+    }, [filtered, currentPage]);
 
     return (
         <AnimatePresence>
@@ -103,20 +127,37 @@ export default function NoticeQueryModal({ notices, isOpen, onClose }) {
                         </h2>
 
                         {!selectedNotice && (
-                            <div className="flex gap-2 mb-4">
+                            <div className="flex flex-col sm:flex-row gap-2 mb-4">
                                 <input
                                     type="text"
                                     value={search}
-                                    onChange={(e) => setSearch(e.target.value)}
+                                    onChange={(e) => {
+                                        setSearch(e.target.value);
+                                        setCurrentPage(1);
+                                    }}
                                     placeholder="輸入關鍵字搜尋"
                                     className="flex-1 p-2 border rounded"
                                 />
+
+                                <select
+                                    value={searchScope}
+                                    onChange={(e) => {
+                                        setSearchScope(e.target.value);
+                                        setCurrentPage(1);
+                                    }}
+                                    className="w-36 p-2 border rounded"
+                                >
+                                    <option value="title">標題</option>
+                                    <option value="all">包含內文</option>
+                                </select>
+
                                 <select
                                     value={filterYear}
-                                    onChange={(e) =>
-                                        setFilterYear(e.target.value)
-                                    }
-                                    className="p-2 pr-8 border rounded appearance-none"
+                                    onChange={(e) => {
+                                        setFilterYear(e.target.value);
+                                        setCurrentPage(1);
+                                    }}
+                                    className="w-32 p-2 border rounded"
                                 >
                                     <option value="all">全部年份</option>
                                     {yearOptions.map((y) => (
@@ -137,8 +178,30 @@ export default function NoticeQueryModal({ notices, isOpen, onClose }) {
                                     animate={{ opacity: 1, y: 0 }}
                                     exit={{ opacity: 0, y: -10 }}
                                     transition={{ duration: 0.3 }}
-                                    className="bg-yellow-100 dark:bg-zinc-700 p-4 rounded shadow"
+                                    className="relative bg-yellow-100 dark:bg-zinc-700 p-4 rounded shadow"
                                 >
+                                    {isAdmin && selectedNotice && (
+                                        <div className="absolute top-4 right-4 flex gap-2">
+                                            <Link
+                                                href={route(
+                                                    "notices.edit",
+                                                    selectedNotice.id
+                                                )}
+                                                className="bg-indigo-400 hover:bg-indigo-500 text-white px-3 py-1 rounded text-sm shadow"
+                                            >
+                                                編輯
+                                            </Link>
+                                            <button
+                                                onClick={() =>
+                                                    onDelete(selectedNotice.id)
+                                                }
+                                                className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm shadow"
+                                            >
+                                                刪除
+                                            </button>
+                                        </div>
+                                    )}
+
                                     <h3 className="text-xl font-bold mb-2 text-zinc-800 dark:text-white">
                                         {selectedNotice.title}
                                     </h3>
@@ -151,7 +214,6 @@ export default function NoticeQueryModal({ notices, isOpen, onClose }) {
                                     <p className="text-zinc-700 dark:text-zinc-200 whitespace-pre-wrap">
                                         {selectedNotice.content}
                                     </p>
-
                                     <motion.button
                                         onClick={() => setSelectedNotice(null)}
                                         className="mt-6 text-sm text-indigo-600 flex items-center gap-1"
@@ -173,55 +235,121 @@ export default function NoticeQueryModal({ notices, isOpen, onClose }) {
                                     </motion.button>
                                 </motion.div>
                             ) : (
-                                <motion.ul
-                                    key="list"
-                                    layout
-                                    transition={{
-                                        type: "spring",
-                                        stiffness: 300,
-                                        damping: 30,
-                                    }}
-                                    className="space-y-2"
-                                >
-                                    {filtered.map((notice) => (
-                                        <motion.li
-                                            layout
-                                            key={notice.id}
-                                            className="bg-yellow-100 dark:bg-zinc-700 p-4 rounded cursor-pointer hover:bg-yellow-200 dark:hover:bg-zinc-600"
-                                            onClick={() =>
-                                                setSelectedNotice(notice)
-                                            }
-                                            initial={{ opacity: 0, y: 20 }}
-                                            animate={{ opacity: 1, y: 0 }}
-                                            exit={{ opacity: 0, y: -20 }}
-                                            transition={{
-                                                duration: 0.3,
-                                                ease: "easeOut",
-                                            }}
-                                            whileHover={{
-                                                scale: 1.05,
-                                                boxShadow:
-                                                    "0 6px 24px rgba(0,0,0,0.15)",
-                                                transition: {
-                                                    type: "spring",
-                                                    stiffness: 300,
-                                                    damping: 18,
-                                                },
-                                            }}
-                                            whileTap={{ scale: 0.96 }}
-                                        >
-                                            <h3 className="text-zinc-700 font-semibold text-base dark:text-white hover:underline">
-                                                {notice.title}
-                                            </h3>
-                                            <p className="text-sm text-gray-600 dark:text-gray-300">
-                                                發布日期：
-                                                {new Date(
-                                                    notice.created_at
-                                                ).toLocaleDateString()}
-                                            </p>
-                                        </motion.li>
-                                    ))}
-                                </motion.ul>
+                                <>
+                                    <motion.ul
+                                        key="list"
+                                        layout
+                                        transition={{
+                                            type: "spring",
+                                            stiffness: 300,
+                                            damping: 30,
+                                        }}
+                                        className="space-y-2"
+                                    >
+                                        {paginatedNotices.map((notice) => (
+                                            <motion.li
+                                                layout
+                                                key={notice.id}
+                                                className="bg-yellow-100 dark:bg-zinc-700 p-4 rounded cursor-pointer hover:bg-yellow-200 dark:hover:bg-zinc-600"
+                                                onClick={() =>
+                                                    setSelectedNotice(notice)
+                                                }
+                                                initial={{ opacity: 0, y: 20 }}
+                                                animate={{ opacity: 1, y: 0 }}
+                                                exit={{ opacity: 0, y: -20 }}
+                                                transition={{
+                                                    duration: 0.3,
+                                                    ease: "easeOut",
+                                                }}
+                                                whileHover={{
+                                                    scale: 1.05,
+                                                    boxShadow:
+                                                        "0 6px 24px rgba(0,0,0,0.15)",
+                                                    transition: {
+                                                        type: "spring",
+                                                        stiffness: 300,
+                                                        damping: 18,
+                                                    },
+                                                }}
+                                                whileTap={{ scale: 0.96 }}
+                                            >
+                                                <h3 className="text-zinc-700 font-semibold text-base dark:text-white hover:underline">
+                                                    {notice.title}
+                                                </h3>
+                                                <p className="text-sm text-gray-600 dark:text-gray-300">
+                                                    發布日期：
+                                                    {new Date(
+                                                        notice.created_at
+                                                    ).toLocaleDateString()}
+                                                </p>
+                                            </motion.li>
+                                        ))}
+                                    </motion.ul>
+
+                                    {totalPages > 1 && (
+                                        <div className="flex justify-center items-center gap-2 mt-4">
+                                            <button
+                                                onClick={() =>
+                                                    setCurrentPage((prev) =>
+                                                        Math.max(prev - 1, 1)
+                                                    )
+                                                }
+                                                disabled={currentPage === 1}
+                                                className={`px-3 py-1 border rounded transition 
+                                                ${
+                                                    currentPage === 1
+                                                        ? "bg-gray-200 text-gray-500 cursor-not-allowed"
+                                                        : "hover:bg-indigo-100"
+                                                }`}
+                                            >
+                                                &lt;
+                                            </button>
+
+                                            {[...Array(totalPages)].map(
+                                                (_, i) => (
+                                                    <button
+                                                        key={i}
+                                                        onClick={() =>
+                                                            setCurrentPage(
+                                                                i + 1
+                                                            )
+                                                        }
+                                                        className={`px-3 py-1 border rounded transition 
+                                                ${
+                                                    i + 1 === currentPage
+                                                        ? "bg-indigo-600 text-white"
+                                                        : "hover:bg-indigo-100"
+                                                }`}
+                                                    >
+                                                        {i + 1}
+                                                    </button>
+                                                )
+                                            )}
+
+                                            <button
+                                                onClick={() =>
+                                                    setCurrentPage((prev) =>
+                                                        Math.min(
+                                                            prev + 1,
+                                                            totalPages
+                                                        )
+                                                    )
+                                                }
+                                                disabled={
+                                                    currentPage === totalPages
+                                                }
+                                                className={`px-3 py-1 border rounded transition 
+                                                ${
+                                                    currentPage === totalPages
+                                                        ? "bg-gray-200 text-gray-500 cursor-not-allowed"
+                                                        : "hover:bg-indigo-100"
+                                                }`}
+                                            >
+                                                &gt;
+                                            </button>
+                                        </div>
+                                    )}
+                                </>
                             )}
                         </AnimatePresence>
                     </motion.div>

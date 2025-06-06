@@ -7,6 +7,8 @@ use App\Http\Controllers\NoticeController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Models\Notice;
+
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -15,6 +17,10 @@ Route::get('/', function () {
         'phpVersion' => PHP_VERSION,
     ]);
 })->name('home');
+
+Route::get('/api/notices/all', function () {
+    return Notice::orderBy('created_at', 'desc')->get();
+});
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
@@ -32,7 +38,9 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/admin', function () {
-        return Inertia::render('Admin/Dashboard');
+        return Inertia::render('Admin/Dashboard', [
+            'notices' => Notice::orderBy('created_at', 'desc')->get(),
+        ]);
     })->name('admin.dashboard');
 
     Route::get('/admin/notices', [NoticeController::class, 'adminIndex'])->name('admin.notices.index');

@@ -1,10 +1,22 @@
-import React from "react";
+import React, { useState } from "react";
 import Header from "@/Components/Header";
 import Footer from "@/Components/Footer";
 import SidePanel from "@/Components/SidePanel";
+import NoticeQueryModal from "@/Components/NoticeQueryModal";
 import { Head } from "@inertiajs/react";
+import { router } from "@inertiajs/react";
 
-export default function Dashboard({ auth }) {
+export default function Dashboard({ auth, notices }) {
+    const [showNoticeModal, setShowNoticeModal] = useState(false);
+
+    const handleDelete = (id) => {
+        if (confirm("確定要刪除此公告嗎？")) {
+            router.delete(route("notices.destroy", id), {
+                onSuccess: () => setShowNoticeModal(false),
+            });
+        }
+    };
+
     return (
         <>
             <Head title="管理員專區" />
@@ -16,28 +28,37 @@ export default function Dashboard({ auth }) {
                     <p className="text-lg">歡迎，{auth.user.name}！</p>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <a
-                            href={route("admin.notices.index")}
-                            className="bg-blue-500 hover:bg-blue-600 text-white p-4 rounded shadow text-center"
+                        <div
+                            onClick={() => setShowNoticeModal(true)}
+                            className="bg-blue-500 hover:bg-blue-600 text-white p-4 rounded shadow text-center cursor-pointer"
                         >
                             公告管理
-                        </a>
+                        </div>
 
                         <a
                             href="/teams"
-                            className="bg-green-500 hover:bg-green-600 text-white p-4 rounded shadow text-center"
+                            className="bg-green-500 hover:bg-green-600 text-white p-4 rounded shadow text-center block"
                         >
                             隊伍總覽
                         </a>
+
                         <a
                             href="/scores"
-                            className="bg-yellow-500 hover:bg-yellow-600 text-white p-4 rounded shadow text-center"
+                            className="bg-yellow-500 hover:bg-yellow-600 text-white p-4 rounded shadow text-center block"
                         >
                             評分總表
                         </a>
                     </div>
                 </main>
                 <Footer />
+
+                <NoticeQueryModal
+                    notices={notices ?? []}
+                    isOpen={showNoticeModal}
+                    onClose={() => setShowNoticeModal(false)}
+                    isAdmin={auth.user.role === "admin"}
+                    onDelete={handleDelete}
+                />
             </div>
         </>
     );
