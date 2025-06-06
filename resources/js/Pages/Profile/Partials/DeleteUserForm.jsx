@@ -1,13 +1,13 @@
-import DangerButton from '@/Components/DangerButton';
-import InputError from '@/Components/InputError';
-import InputLabel from '@/Components/InputLabel';
-import Modal from '@/Components/Modal';
-import SecondaryButton from '@/Components/SecondaryButton';
-import TextInput from '@/Components/TextInput';
-import { useForm } from '@inertiajs/react';
-import { useRef, useState } from 'react';
+import DangerButton from "@/Components/DangerButton";
+import InputError from "@/Components/InputError";
+import InputLabel from "@/Components/InputLabel";
+import Modal from "@/Components/Modal";
+import SecondaryButton from "@/Components/SecondaryButton";
+import TextInput from "@/Components/TextInput";
+import { useForm } from "@inertiajs/react";
+import { useRef, useState } from "react";
 
-export default function DeleteUserForm({ className = '' }) {
+export default function DeleteUserForm({ className = "" }) {
     const [confirmingUserDeletion, setConfirmingUserDeletion] = useState(false);
     const passwordInput = useRef();
 
@@ -19,9 +19,7 @@ export default function DeleteUserForm({ className = '' }) {
         reset,
         errors,
         clearErrors,
-    } = useForm({
-        password: '',
-    });
+    } = useForm({ password: "" });
 
     const confirmUserDeletion = () => {
         setConfirmingUserDeletion(true);
@@ -29,8 +27,7 @@ export default function DeleteUserForm({ className = '' }) {
 
     const deleteUser = (e) => {
         e.preventDefault();
-
-        destroy(route('profile.destroy'), {
+        destroy(route("profile.destroy"), {
             preserveScroll: true,
             onSuccess: () => closeModal(),
             onError: () => passwordInput.current.focus(),
@@ -40,7 +37,6 @@ export default function DeleteUserForm({ className = '' }) {
 
     const closeModal = () => {
         setConfirmingUserDeletion(false);
-
         clearErrors();
         reset();
     };
@@ -48,33 +44,32 @@ export default function DeleteUserForm({ className = '' }) {
     return (
         <section className={`space-y-6 ${className}`}>
             <header>
-                <h2 className="text-lg font-medium text-gray-900">
+                <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
                     刪除帳號
                 </h2>
-
-                <p className="mt-1 text-sm text-gray-600">
+                <p className="mt-1 text-sm text-gray-600 dark:text-gray-300">
                     一旦刪除帳號，所有資源和數據將被永久刪除。在刪除帳號之前，請下載任何您希望保留的數據或訊息。
                 </p>
             </header>
 
-            <DangerButton onClick={confirmUserDeletion}>
-                刪除帳號
-            </DangerButton>
+            <DangerButton onClick={confirmUserDeletion}>刪除帳號</DangerButton>
 
             <Modal show={confirmingUserDeletion} onClose={closeModal}>
-                <form onSubmit={deleteUser} className="p-6">
-                    <h2 className="text-lg font-medium text-gray-900">
+                <form
+                    onSubmit={deleteUser}
+                    className="p-6 bg-white dark:bg-zinc-800 text-gray-900 dark:text-white rounded"
+                >
+                    <h2 className="text-lg font-medium">
                         你確定要刪除你的帳號嗎？
                     </h2>
-
-                    <p className="mt-1 text-sm text-gray-600">
+                    <p className="mt-1 text-sm text-gray-600 dark:text-gray-300">
                         一旦刪除帳號，所有資源和數據將被永久刪除。在刪除帳號之前，請下載任何您希望保留的數據或訊息。
                     </p>
 
                     <div className="mt-6">
                         <InputLabel
                             htmlFor="password"
-                            value="Password"
+                            value="密碼"
                             className="sr-only"
                         />
 
@@ -85,16 +80,16 @@ export default function DeleteUserForm({ className = '' }) {
                             ref={passwordInput}
                             value={data.password}
                             onChange={(e) =>
-                                setData('password', e.target.value)
+                                setData("password", e.target.value)
                             }
-                            className="mt-1 block w-3/4"
+                            className="mt-1 block w-3/4 bg-white dark:bg-zinc-700 text-gray-900 dark:text-white placeholder-gray-400 focus:ring-indigo-500 focus:border-indigo-500"
                             isFocused
                             placeholder="密碼"
                         />
 
                         <InputError
                             message={errors.password}
-                            className="mt-2"
+                            className="mt-2 text-red-600 dark:text-red-400"
                         />
                     </div>
 

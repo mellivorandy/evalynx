@@ -17,7 +17,7 @@ export default function Header({ auth, onLoginClick, onRegisterClick }) {
                     {auth?.user ? (
                         <>
                             <Link
-                                href="/dashboard"
+                                href="/profile"
                                 className="transition text-white hover:text-yellow-300"
                             >
                                 我的資訊
