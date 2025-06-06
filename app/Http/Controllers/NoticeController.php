@@ -101,4 +101,11 @@ class NoticeController extends Controller
 
         return back()->with('success', '公告已更新！');
     }
+
+    public function destroy(Notice $notice)
+    {
+        $notice->delete();
+
+        return back()->with('success', '公告已成功刪除。');
+    }
 }

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, useMemo } from "react";
 import { AnimatePresence, motion, useAnimation } from "framer-motion";
-import { usePage } from "@inertiajs/react";
+import { usePage, router } from "@inertiajs/react";
 import EditNoticeModal from "@/Components/EditNoticeModal";
 
 export default function NoticeQueryModal({
@@ -104,6 +104,21 @@ export default function NoticeQueryModal({
 
         setTimeout(() => setShowFlash(false), 3000);
         setTimeout(() => setFlashMessage(""), 3500);
+    };
+
+    const handleDelete = () => {
+        if (confirm("確定要刪除此公告嗎？")) {
+            router.delete(route("notices.destroy", selectedNotice.id), {
+                onSuccess: () => {
+                    setSelectedNotice(null);
+                    router.reload({ only: ["notices"] });
+                    setFlashMessage("刪除成功！");
+                    setShowFlash(true);
+                    setTimeout(() => setShowFlash(false), 3000);
+                    setTimeout(() => setFlashMessage(""), 3500);
+                },
+            });
+        }
     };
 
     const totalPages = Math.ceil(filtered.length / pageSize);
@@ -230,9 +245,7 @@ export default function NoticeQueryModal({
                                                 編輯
                                             </button>
                                             <button
-                                                onClick={() =>
-                                                    onDelete(selectedNotice.id)
-                                                }
+                                                onClick={handleDelete}
                                                 className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm shadow"
                                             >
                                                 刪除

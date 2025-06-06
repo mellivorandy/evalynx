@@ -9,14 +9,6 @@ import { router } from "@inertiajs/react";
 export default function Dashboard({ auth, notices }) {
     const [showNoticeModal, setShowNoticeModal] = useState(false);
 
-    const handleDelete = (id) => {
-        if (confirm("確定要刪除此公告嗎？")) {
-            router.delete(route("notices.destroy", id), {
-                onSuccess: () => setShowNoticeModal(false),
-            });
-        }
-    };
-
     return (
         <>
             <Head title="管理員專區" />
@@ -57,7 +49,6 @@ export default function Dashboard({ auth, notices }) {
                     isOpen={showNoticeModal}
                     onClose={() => setShowNoticeModal(false)}
                     isAdmin={auth.user.role === "admin"}
-                    onDelete={handleDelete}
                 />
             </div>
         </>
