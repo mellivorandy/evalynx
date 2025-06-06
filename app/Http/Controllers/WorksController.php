@@ -1,7 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 
-use App\Models\Project;
+use App\Models\Past_projects;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -9,16 +9,16 @@ class WorksController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Project::query();
+        $query = Past_projects::query();
 
         if ($search = $request->input('search')) {
             $query->where('title', 'like', "%{$search}%");
         }
 
-        $works = $query->orderBy('id', 'desc')->paginate(10);
+        $pastWorks = $query->orderBy('id', 'desc')->paginate(10);
 
         return Inertia::render('Works/Index', [
-            'works' => $works,
+            'pastWorks' => $pastWorks,
             'filters' => $request->only('search'),
         ]);
     }

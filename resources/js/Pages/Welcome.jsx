@@ -104,7 +104,33 @@ export default function Welcome({ auth, notices }) {
                                 </p>
                             </Link>
                         )}
-
+                         {auth?.user?.role === "teacher" && (
+                            <Link
+                                href="/teacher"
+                                className="bg-indigo-100 p-4 rounded shadow hover:bg-indigo-200 transition-all duration-300 transform hover:animate-wiggle text-center flex flex-col items-center justify-center h-28"
+                            >
+                                <h2 className="font-semibold text-lg">
+                                    老師專區
+                                </h2>
+                                <p className="text-sm text-gray-600">
+                                    查看指導隊伍作品
+                                </p>
+                            </Link>
+                        )}
+                         {auth?.user?.role === "teacher" && (
+                            <Link
+                                href="/works"
+                                className="bg-indigo-100 p-4 rounded shadow hover:bg-indigo-200 transition-all duration-300 transform hover:animate-wiggle text-center flex flex-col items-center justify-center h-28"
+                            >
+                                <h2 className="font-semibold text-lg">
+                                    老師專區
+                                </h2>
+                                <p className="text-sm text-gray-600">
+                                    查看歷屆作品
+                                </p>
+                            </Link>
+                        )}
+                        
                         {auth?.user?.role === "admin" && (
                             <Link href={route("admin.dashboard")}>
                                 <motion.div
