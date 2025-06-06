@@ -15,6 +15,15 @@ export default function Welcome({ auth, notices }) {
     const [showRegisterModal, setShowRegisterModal] = useState(false);
     const noticeModalRef = useRef(null);
     const [pageDirection, setPageDirection] = useState(0);
+    const [allNotices, setAllNotices] = useState([]);
+
+    useEffect(() => {
+        if (showNoticeModal && allNotices.length === 0) {
+            fetch("/api/notices/all")
+                .then((res) => res.json())
+                .then((data) => setAllNotices(data));
+        }
+    }, [showNoticeModal]);
 
     useEffect(() => {
         if (selectedNotice) {
@@ -388,7 +397,7 @@ export default function Welcome({ auth, notices }) {
                 />
 
                 <NoticeQueryModal
-                    notices={notices.data}
+                    notices={allNotices}
                     isOpen={showNoticeModal}
                     onClose={() => setShowNoticeModal(false)}
                     onSelect={(notice) => setSelectedNotice(notice)}

@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Models\Notice;
 
-
 Route::get('/', function () {
     return Inertia::render('Welcome', [
         'notices' => \App\Models\Notice::orderBy('created_at', 'desc')->paginate(5),
@@ -17,6 +16,10 @@ Route::get('/', function () {
         'phpVersion' => PHP_VERSION,
     ]);
 })->name('home');
+
+Route::get('/api/notices/all', function () {
+    return Notice::orderBy('created_at', 'desc')->get();
+});
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
