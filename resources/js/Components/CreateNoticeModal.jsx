@@ -1,34 +1,28 @@
 import { router } from "@inertiajs/react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 
-export default function EditNoticeModal({ notice, isOpen, onClose, onSuccess }) {
+export default function CreateNoticeModal({ isOpen, onClose, onSuccess }) {
     const getTodayDate = () => {
         const today = new Date();
         return today.toISOString().split("T")[0];
     };
 
-    const [form, setForm] = useState({
+    const initialForm = {
         title: "",
         content: "",
-        event_date: "",
+        event_date: getTodayDate(),
         prize: "",
         rules: "",
-    });
+    };
+
+    const [form, setForm] = useState(initialForm);
 
     const modalRef = useRef(null);
 
     useEffect(() => {
-        if (notice) {
-            setForm({
-                title: notice.title ?? "",
-                content: notice.content ?? "",
-                event_date: notice.event_date || getTodayDate(),
-                prize: notice.prize ?? "",
-                rules: notice.rules ?? "",
-            });
-        }
-    }, [notice]);
+        if (isOpen) setForm(initialForm);
+    }, [isOpen]);
 
     const handleChange = (field) => (e) => {
         setForm((prev) => ({ ...prev, [field]: e.target.value }));
@@ -36,10 +30,10 @@ export default function EditNoticeModal({ notice, isOpen, onClose, onSuccess }) 
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        router.put(route("notices.update", notice.id), form, {
-            preserveState: true,
+        router.post(route("notices.store"), form, {
+            preserveScroll: true,
             onSuccess: () => {
-                onSuccess?.("公告已更新！");
+                onSuccess?.("公告已新增！");
                 onClose();
                 router.reload({ only: ["notices"] });
             },
@@ -75,7 +69,7 @@ export default function EditNoticeModal({ notice, isOpen, onClose, onSuccess }) 
                             &times;
                         </button>
 
-                        <h2 className="text-xl font-bold mb-4">編輯公告</h2>
+                        <h2 className="text-xl font-bold mb-4">新增公告</h2>
 
                         <form onSubmit={handleSubmit} className="space-y-4">
                             <input
@@ -127,7 +121,7 @@ export default function EditNoticeModal({ notice, isOpen, onClose, onSuccess }) 
                                     type="submit"
                                     className="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700"
                                 >
-                                    儲存修改
+                                    儲存公告
                                 </button>
                             </div>
                         </form>

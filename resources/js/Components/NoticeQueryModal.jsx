@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, useMemo } from "react";
 import { AnimatePresence, motion, useAnimation } from "framer-motion";
 import { usePage, router } from "@inertiajs/react";
 import EditNoticeModal from "@/Components/EditNoticeModal";
+import CreateNoticeModal from "@/Components/CreateNoticeModal";
 
 export default function NoticeQueryModal({
     notices,
@@ -16,6 +17,7 @@ export default function NoticeQueryModal({
     const [currentPage, setCurrentPage] = useState(1);
     const [searchScope, setSearchScope] = useState("title");
     const [showEditModal, setShowEditModal] = useState(false);
+    const [showCreateModal, setShowCreateModal] = useState(false);
 
     const { flash } = usePage().props;
     const [showFlash, setShowFlash] = useState(!!flash.success);
@@ -176,7 +178,7 @@ export default function NoticeQueryModal({
                             &times;
                         </button>
 
-                        <h2 className="text-2xl font-bold mb-4 text-indigo-700 text-center">
+                        <h2 className="text-2xl font-bold mb-4 text-indigo-700 dark:text-indigo-500  text-center">
                             公告查詢
                         </h2>
 
@@ -190,7 +192,7 @@ export default function NoticeQueryModal({
                                         setCurrentPage(1);
                                     }}
                                     placeholder="輸入關鍵字搜尋"
-                                    className="flex-1 p-2 border rounded"
+                                    className="flex-1 p-2 border rounded bg-white text-black dark:bg-zinc-700 dark:text-white dark:border-zinc-600 placeholder-gray-500 dark:placeholder-gray-400"
                                 />
 
                                 <select
@@ -199,7 +201,7 @@ export default function NoticeQueryModal({
                                         setSearchScope(e.target.value);
                                         setCurrentPage(1);
                                     }}
-                                    className="w-36 p-2 border rounded"
+                                    className="w-36 p-2 border rounded bg-white text-black dark:bg-zinc-700 dark:text-white dark:border-zinc-600"
                                 >
                                     <option value="title">標題</option>
                                     <option value="all">包含內文</option>
@@ -211,7 +213,7 @@ export default function NoticeQueryModal({
                                         setFilterYear(e.target.value);
                                         setCurrentPage(1);
                                     }}
-                                    className="w-32 p-2 border rounded"
+                                    className="w-32 p-2 border rounded bg-white text-black dark:bg-zinc-700 dark:text-white dark:border-zinc-600"
                                 >
                                     <option value="all">全部年份</option>
                                     {yearOptions.map((y) => (
@@ -345,14 +347,16 @@ export default function NoticeQueryModal({
                                                     )
                                                 }
                                                 disabled={currentPage === 1}
-                                                className={`px-3 py-1 border rounded transition ${
+                                                className={`px-3 py-1 border rounded transition 
+                                                ${
                                                     currentPage === 1
-                                                        ? "bg-gray-200 text-gray-500 cursor-not-allowed"
-                                                        : "hover:bg-indigo-100"
+                                                        ? "bg-gray-300 text-gray-500 dark:bg-zinc-600 dark:text-zinc-400 opacity-60 cursor-not-allowed"
+                                                        : "hover:bg-indigo-100 dark:hover:bg-zinc-600 text-black dark:text-white"
                                                 }`}
                                             >
                                                 &lt;
                                             </button>
+                                            
                                             {[...Array(totalPages)].map(
                                                 (_, i) => (
                                                     <button
@@ -362,11 +366,12 @@ export default function NoticeQueryModal({
                                                                 i + 1
                                                             )
                                                         }
-                                                        className={`px-3 py-1 border rounded transition ${
+                                                        className={`px-3 py-1 border rounded transition 
+                                                        ${
                                                             i + 1 ===
                                                             currentPage
                                                                 ? "bg-indigo-600 text-white"
-                                                                : "hover:bg-indigo-100"
+                                                                : "hover:bg-indigo-100 dark:hover:bg-zinc-600 text-black dark:text-white"
                                                         }`}
                                                     >
                                                         {i + 1}
@@ -386,10 +391,11 @@ export default function NoticeQueryModal({
                                                 disabled={
                                                     currentPage === totalPages
                                                 }
-                                                className={`px-3 py-1 border rounded transition ${
+                                                className={`px-3 py-1 border rounded transition 
+                                                ${
                                                     currentPage === totalPages
-                                                        ? "bg-gray-200 text-gray-500 cursor-not-allowed"
-                                                        : "hover:bg-indigo-100"
+                                                        ? "bg-gray-300 text-gray-500 dark:bg-zinc-600 dark:text-zinc-400 opacity-60 cursor-not-allowed"
+                                                        : "hover:bg-indigo-100 dark:hover:bg-zinc-600 text-black dark:text-white"
                                                 }`}
                                             >
                                                 &gt;
@@ -406,6 +412,21 @@ export default function NoticeQueryModal({
                                 onClose={() => setShowEditModal(false)}
                                 onSuccess={handleSuccessMessage}
                             />
+                        )}
+                        {isAdmin && !selectedNotice && (
+                            <>
+                                <button
+                                    onClick={() => setShowCreateModal(true)}
+                                    className="absolute bottom-5 right-6 px-4 py-2 rounded-md bg-indigo-600 hover:bg-indigo-800 text-white text-sm font-semibold shadow transition duration-300"
+                                >
+                                    ＋ 新增公告
+                                </button>
+                                <CreateNoticeModal
+                                    isOpen={showCreateModal}
+                                    onClose={() => setShowCreateModal(false)}
+                                    onSuccess={handleSuccessMessage}
+                                />
+                            </>
                         )}
                     </motion.div>
                 </motion.div>

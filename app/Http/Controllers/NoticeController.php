@@ -77,7 +77,7 @@ class NoticeController extends Controller
 
         Notice::create($validated);
 
-        return redirect()->route('admin.notices.index')->with('success', '公告新增成功！');
+        return redirect()->back()->with('success', '公告已新增！');
     }
 
     public function edit(Notice $notice)
@@ -106,6 +106,6 @@ class NoticeController extends Controller
     {
         $notice->delete();
 
-        return back()->with('success', '公告已成功刪除。');
+        return back()->with('success', '公告已刪除！');
     }
 }
