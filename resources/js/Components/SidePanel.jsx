@@ -77,7 +77,7 @@ export default function SidePanel({ auth }) {
 
                     {auth?.user?.role === "admin" && (
                         <Link
-                            href="/judge/score"
+                            href="/admin"
                             className="flex items-center w-full px-4 py-2 hover:bg-indigo-600"
                         >
                             <img
