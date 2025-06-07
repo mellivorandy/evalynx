@@ -10,40 +10,54 @@ const SCORE_LABELS = {
   score4: '完整度與展示效果',
 };
 
-export default function Edit({ show, onClose, judge, projects = [], teams = [] }) {
-  // hooks 必須在最上方
+export default function Edit({ show, onClose, judge, judges = [], projects = [], teams = [] }) {
+  // 關鍵修正：用 judge.id 找 project
+  if (!judge) return <div>Loading...</div>;
+
+  // 取得初始 project/team
+  const initialProject = projects.find((p) => String(p.id) === String(judge.id)) || projects[0] || {};
+  const initialTeam = teams.find((t) => String(t.id) === String(initialProject.team_id)) || {};
+
+  // 初始化用 judge 的資料
   const { data, setData, put, processing, errors, reset } = useForm({
-    id: judge?.id ?? '',
-    team_id: judge?.team_id ?? '',
-    title: judge?.title ?? '',
-    description: judge?.description ?? '',
-    team_name: judge?.team_name ?? '',
-    completed: judge?.completed ?? false,
-    score1: judge?.score1 ?? 0,
-    score2: judge?.score2 ?? 0,
-    score3: judge?.score3 ?? 0,
-    score4: judge?.score4 ?? 0,
+    id: judge.id ?? initialProject.id ?? '',
+    team_id: initialProject.team_id ?? '',
+    title: initialProject.title ?? '',
+    description: judge.description ?? '',
+    team_name: initialTeam.name ?? '',
+    completed: judge.completed ?? false,
+    score1: judge.score1 ?? '',
+    score2: judge.score2 ?? '',
+    score3: judge.score3 ?? '',
+    score4: judge.score4 ?? '',
   });
 
   const [total, setTotal] = useState(0);
 
+  // 計算總分
   useEffect(() => {
-    setTotal(
-      SCORE_FIELDS.reduce((sum, key) => sum + Number(data[key] || 0), 0)
-    );
+    setTotal(SCORE_FIELDS.reduce((sum, key) => sum + Number(data[key] || 0), 0));
   }, [data]);
 
-  // judge 為 null 時不渲染
-  if (!judge) return null;
-
+  // 切換作品時，從 judges 查找分數與評論
   const handleProjectChange = (e) => {
     const selectedId = e.target.value;
-    setData('id', selectedId);
-    const project = projects.find((p) => String(p.id) === String(selectedId));
-    setData('team_id', project ? project.team_id : '');
-    setData('title', project ? project.title : '');
-    const team = teams.find((t) => String(t.id) === String(project ? project.team_id : ''));
-    setData('team_name', team ? team.name : '');
+    const project = projects.find((p) => String(p.id) === String(selectedId)) || {};
+    const team = teams.find((t) => String(t.id) === String(project.team_id)) || {};
+    const judgeRecord = judges.find((j) => String(j.id) === String(selectedId)) || {};
+
+    setData({
+      id: selectedId,
+      team_id: project.team_id ?? '',
+      title: project.title ?? '',
+      description: judgeRecord.description ?? '',
+      team_name: team.name ?? '',
+      completed: judgeRecord.completed ?? false,
+      score1: judgeRecord.score1 ?? '',
+      score2: judgeRecord.score2 ?? '',
+      score3: judgeRecord.score3 ?? '',
+      score4: judgeRecord.score4 ?? '',
+    });
   };
 
   const handleChange = (e) => {
@@ -53,7 +67,8 @@ export default function Edit({ show, onClose, judge, projects = [], teams = [] }
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    put(route('judges.update', judge.id), {
+    put(route('judges.update', data.id), {
+      preserveState: false, // 關鍵：確保每次送出後重新 fetch 最新資料
       onSuccess: () => {
         reset();
         onClose();
@@ -94,6 +109,45 @@ export default function Edit({ show, onClose, judge, projects = [], teams = [] }
             {errors.id && (
               <div className="text-red-500 text-xs mt-1">{errors.id}</div>
             )}
+
+            {/* 作品連結區塊 */}
+            {(() => {
+              const selectedProject = projects.find((p) => String(p.id) === String(data.id)) || {};
+              return (
+                <div className="flex flex-col gap-1 mt-3 ml-1">
+                  {selectedProject.proposal_path && (
+                    <a
+                      href={selectedProject.proposal_path}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-400 hover:text-blue-300 underline underline-offset-2 font-medium transition"
+                    >
+                      📄 企劃書下載
+                    </a>
+                  )}
+                  {selectedProject.poster_path && (
+                    <a
+                      href={selectedProject.poster_path}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-400 hover:text-blue-300 underline underline-offset-2 font-medium transition"
+                    >
+                      🖼️ 海報下載
+                    </a>
+                  )}
+                  {selectedProject.code_link && (
+                    <a
+                      href={selectedProject.code_link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-400 hover:text-blue-300 underline underline-offset-2 font-medium transition"
+                    >
+                      💻 原始碼連結
+                    </a>
+                  )}
+                </div>
+              );
+            })()}
           </div>
 
           {data.team_id && (
@@ -185,7 +239,6 @@ export default function Edit({ show, onClose, judge, projects = [], teams = [] }
             rows={3}
           />
         </div>
-
         <div className="flex justify-end gap-3 mt-6">
           <button
             type="button"
