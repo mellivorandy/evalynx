@@ -1,4 +1,5 @@
 <?php
+
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\WorksController;
 use App\Http\Controllers\JudgeController;
@@ -54,4 +55,4 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 
 require __DIR__ . '/auth.php';
-require __DIR__.'/student.php';
+require __DIR__ . '/student.php';
