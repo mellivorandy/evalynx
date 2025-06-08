@@ -91,6 +91,22 @@ export default function SidePanel({ auth }) {
                         </Link>
                     )}
 
+                    {auth?.user?.role === "teacher" && (
+                        <Link
+                            href="/teacher"
+                            className="flex items-center w-full px-3.5 py-1.5 hover:bg-indigo-600"
+                        >
+                            <img
+                                src="/images/education-icon.png"
+                                alt="指導老師專區"
+                                className="w-8 h-8 mr-2"
+                            />
+                            <span className="ml-2 text-black dark:text-black whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                指導老師專區
+                            </span>
+                        </Link>
+                    )}
+
                     {auth?.user?.role === "judge" && (
                         <Link
                             href="/judge/score"
