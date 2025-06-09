@@ -23,6 +23,9 @@ Route::get('/api/notices/all', function () {
     return Notice::orderBy('created_at', 'desc')->get();
 });
 
+Route::get('/teacher/my-teams', [TeacherController::class, 'index'])->name('teacher.my-teams');
+Route::get('/teacher/dashboard', [TeacherController::class, 'dashboard'])->name('teacher.dashboard');
+
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');

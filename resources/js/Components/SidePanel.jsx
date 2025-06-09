@@ -93,7 +93,7 @@ export default function SidePanel({ auth }) {
 
                     {auth?.user?.role === "teacher" && (
                         <Link
-                            href="/teacher"
+                            href="/teacher/dashboard"
                             className="flex items-center w-full px-3.5 py-1.5 hover:bg-indigo-600"
                         >
                             <img

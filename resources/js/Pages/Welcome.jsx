@@ -119,7 +119,7 @@ export default function Welcome({ auth, notices }) {
                                 className="bg-indigo-100 p-4 rounded shadow hover:bg-indigo-200 transition-all duration-300 transform hover:animate-wiggle text-center flex flex-col items-center justify-center h-28"
                             >
                                 <h2 className="font-semibold text-lg">
-                                    老師專區
+                                    我的隊伍
                                 </h2>
                                 <p className="text-sm text-gray-600">
                                     查看指導隊伍作品
@@ -132,7 +132,7 @@ export default function Welcome({ auth, notices }) {
                                 className="bg-indigo-100 p-4 rounded shadow hover:bg-indigo-200 transition-all duration-300 transform hover:animate-wiggle text-center flex flex-col items-center justify-center h-28"
                             >
                                 <h2 className="font-semibold text-lg">
-                                    老師專區
+                                    歷屆作品
                                 </h2>
                                 <p className="text-sm text-gray-600">
                                     查看歷屆作品

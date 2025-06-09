@@ -6,6 +6,7 @@ use App\Models\Team;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Inertia\Response as InertiaResponse;
+use App\Models\Notice;
 
 class TeacherController extends Controller
 {
@@ -23,6 +24,15 @@ class TeacherController extends Controller
 
         return Inertia::render('Teacher/Index', [
             'teams' => $teams,
+        ]);
+    }
+
+    public function dashboard()
+    {
+        $notices = Notice::orderBy('created_at', 'desc')->get();
+
+        return Inertia::render('Teacher/Dashboard', [
+            'notices' => $notices,
         ]);
     }
 }

@@ -24,6 +24,7 @@
     "dependencies": {
         "@heroicons/react": "^2.2.0",
         "animate.css": "^4.1.1",
-        "framer-motion": "^12.15.0"
+        "framer-motion": "^12.15.0",
+        "lucide-react": "^0.513.0"
     }
 }
