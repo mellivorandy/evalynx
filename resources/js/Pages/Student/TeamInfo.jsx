@@ -2,9 +2,13 @@ import React from "react";
 import { Head } from "@inertiajs/react";
 import Header from "@/Components/Header";
 import SidePanel from "@/Components/SidePanel";
+import EditTeamModal from "@/Components/EditTeamModal";
 import Footer from "@/Components/Footer";
+import { useState } from "react";
 
-export default function TeamInfo({ auth, team }) {
+export default function TeamInfo({ auth, team, self_id }) {
+    const [showEditModal, setShowEditModal] = useState(false);
+
     return (
         <div className="flex flex-col min-h-screen bg-gray-50 text-gray-800 dark:bg-black dark:text-white">
             <Head title="我的隊伍" />
@@ -141,12 +145,12 @@ export default function TeamInfo({ auth, team }) {
                                     回首頁
                                 </a>
 
-                                <a
-                                    href="/register/edit"
-                                    className="inline-block bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-4 rounded transition"
+                                <button
+                                    onClick={() => setShowEditModal(true)}
+                                    className="bg-green-600 hover:bg-green-600 text-white px-4 py-2 rounded shadow"
                                 >
-                                    編輯資料
-                                </a>
+                                    編輯參賽資料
+                                </button>
                             </div>
                         </>
                     )}
@@ -154,6 +158,13 @@ export default function TeamInfo({ auth, team }) {
             </div>
 
             <Footer />
+            <EditTeamModal
+                isOpen={showEditModal}
+                onClose={() => setShowEditModal(false)}
+                team={team}
+                self_id={self_id}
+                self_email={auth.user.email}
+            />
         </div>
     );
 }

@@ -27,6 +27,7 @@ class StudentRegistrationController extends Controller
 
         return Inertia::render('Student/TeamInfo', [
             'team' => $team,
+            'self_id' => Auth::id(),
         ]);
     }
 
