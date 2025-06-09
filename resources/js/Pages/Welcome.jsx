@@ -124,6 +124,28 @@ export default function Welcome({ auth, notices }) {
                             </motion.div>
                         )}
 
+                        {auth?.user?.role === "student" && (
+                            <motion.div
+                                className="bg-amber-100 p-4 rounded shadow hover:bg-amber-300 text-center flex flex-col items-center justify-center h-28 cursor-pointer"
+                                whileHover={{
+                                    rotateY: 360,
+                                    transition: {
+                                        duration: 0.8,
+                                        ease: "easeInOut",
+                                    },
+                                }}
+                                style={{ transformStyle: "preserve-3d" }}
+                                onClick={() => router.visit("/my-team")}
+                            >
+                                <h2 className="font-semibold text-lg">
+                                    隊伍資訊
+                                </h2>
+                                <p className="text-sm text-gray-600">
+                                    查看、修改隊伍資料
+                                </p>
+                            </motion.div>
+                        )}
+
                         {auth?.user?.role === "teacher" && (
                             <Link
                                 href="/teacher"

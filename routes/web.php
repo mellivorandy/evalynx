@@ -53,6 +53,14 @@ Route::get('/my-team', [StudentRegistrationController::class, 'index'])
     ->middleware(['auth', 'verified'])
     ->name('student.team');
 
+Route::get('/register/edit', [StudentRegistrationController::class, 'edit'])
+    ->middleware(['auth', 'verified'])
+    ->name('student.register.edit');
+
+Route::post('/register/update', [StudentRegistrationController::class, 'update'])
+    ->middleware(['auth', 'verified'])
+    ->name('student.register.update');
+
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/admin', function () {
         return Inertia::render('Admin/Dashboard', [

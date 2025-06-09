@@ -54,21 +54,61 @@ export default function TeamInfo({ auth, team }) {
                                                     : "（尚未填寫）"}
                                             </li>
 
-                                            {team.project.code_link && (
-                                                <li>
-                                                    原始碼：
-                                                    <a
-                                                        href={
-                                                            team.project
-                                                                .code_link
-                                                        }
-                                                        target="_blank"
-                                                        rel="noopener noreferrer"
-                                                        className="text-blue-600 underline"
-                                                    >
-                                                        查看連結
-                                                    </a>
-                                                </li>
+                                            {team.project?.[0]?.title?.trim() ? (
+                                                <>
+                                                    <li>
+                                                        標題：
+                                                        {team.project[0].title}
+                                                    </li>
+
+                                                    {team.project[0]
+                                                        .code_link && (
+                                                        <li>
+                                                            原始碼：
+                                                            <a
+                                                                href={
+                                                                    team
+                                                                        .project[0]
+                                                                        .code_link
+                                                                }
+                                                                target="_blank"
+                                                                rel="noopener noreferrer"
+                                                                className="text-blue-600 underline"
+                                                            >
+                                                                查看連結
+                                                            </a>
+                                                        </li>
+                                                    )}
+
+                                                    {team.project[0]
+                                                        .proposal_path && (
+                                                        <li>
+                                                            企劃書（PDF）：
+                                                            <a
+                                                                href={`/storage/${team.project[0].proposal_path}`}
+                                                                target="_blank"
+                                                                rel="noopener noreferrer"
+                                                                className="text-blue-600 underline"
+                                                            >
+                                                                下載查看
+                                                            </a>
+                                                        </li>
+                                                    )}
+
+                                                    {team.project[0]
+                                                        .poster_path && (
+                                                        <li>
+                                                            海報圖檔：
+                                                            <img
+                                                                src={`/storage/${team.project[0].poster_path}`}
+                                                                alt="海報圖"
+                                                                className="max-w-xs mt-2 border rounded"
+                                                            />
+                                                        </li>
+                                                    )}
+                                                </>
+                                            ) : (
+                                                <li>（尚未填寫）</li>
                                             )}
                                         </ul>
                                     ) : (
@@ -93,12 +133,19 @@ export default function TeamInfo({ auth, team }) {
                                 </div>
                             </div>
 
-                            <div className="mt-6">
+                            <div className="mt-6 flex justify-between">
                                 <a
                                     href="/"
                                     className="inline-block bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded transition"
                                 >
                                     回首頁
+                                </a>
+
+                                <a
+                                    href="/register/edit"
+                                    className="inline-block bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-4 rounded transition"
+                                >
+                                    編輯資料
                                 </a>
                             </div>
                         </>
