@@ -3,6 +3,7 @@
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\WorksController;
 use App\Http\Controllers\JudgeController;
+use App\Http\Controllers\StudentRegistrationController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\NoticeController;
 use Illuminate\Foundation\Application;
@@ -39,6 +40,18 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('/works', [WorksController::class, 'index'])->name('works.index');
 });
+
+Route::get('/register/info', [StudentRegistrationController::class, 'create'])
+    ->middleware(['auth', 'verified'])
+    ->name('register.create');
+
+Route::post('/register-team', [StudentRegistrationController::class, 'store'])
+    ->middleware(['auth', 'verified'])
+    ->name('student.register.store');
+
+Route::get('/my-team', [StudentRegistrationController::class, 'index'])
+    ->middleware(['auth', 'verified'])
+    ->name('student.team');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/admin', function () {
