@@ -4,6 +4,7 @@ import Footer from "@/Components/Footer";
 import LoginModal from "@/Components/LoginModal";
 import RegisterModal from "@/Components/RegisterModal";
 import NoticeQueryModal from "@/Components/NoticeQueryModal";
+import RegisterTeamModal from "@/Components/RegisterTeamModal";
 import SidePanel from "@/Components/SidePanel";
 import { Head, Link, router } from "@inertiajs/react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -16,6 +17,7 @@ export default function Welcome({ auth, notices }) {
     const noticeModalRef = useRef(null);
     const [pageDirection, setPageDirection] = useState(0);
     const [allNotices, setAllNotices] = useState([]);
+    const [isTeamRegisterOpen, setIsTeamRegisterOpen] = useState(false);
 
     useEffect(() => {
         if (showNoticeModal && allNotices.length === 0) {
@@ -101,9 +103,17 @@ export default function Welcome({ auth, notices }) {
                         </motion.div>
 
                         {auth?.user?.role === "student" && (
-                            <Link
-                                href="/register/info"
-                                className="bg-indigo-100 p-4 rounded shadow hover:bg-indigo-200 transition-all duration-300 transform hover:animate-wiggle text-center flex flex-col items-center justify-center h-28"
+                            <motion.div
+                                className="bg-amber-100 p-4 rounded shadow hover:bg-amber-300 text-center flex flex-col items-center justify-center h-28 cursor-pointer"
+                                whileHover={{
+                                    rotateY: 360,
+                                    transition: {
+                                        duration: 0.8,
+                                        ease: "easeInOut",
+                                    },
+                                }}
+                                style={{ transformStyle: "preserve-3d" }}
+                                onClick={() => setIsTeamRegisterOpen(true)}
                             >
                                 <h2 className="font-semibold text-lg">
                                     我要報名
@@ -111,8 +121,9 @@ export default function Welcome({ auth, notices }) {
                                 <p className="text-sm text-gray-600">
                                     點我填寫報名資料
                                 </p>
-                            </Link>
+                            </motion.div>
                         )}
+
                         {auth?.user?.role === "teacher" && (
                             <Link
                                 href="/teacher"
@@ -126,6 +137,7 @@ export default function Welcome({ auth, notices }) {
                                 </p>
                             </Link>
                         )}
+
                         {auth?.user?.role === "teacher" && (
                             <Link
                                 href="/works"
@@ -427,6 +439,11 @@ export default function Welcome({ auth, notices }) {
                     isOpen={showNoticeModal}
                     onClose={() => setShowNoticeModal(false)}
                     onSelect={(notice) => setSelectedNotice(notice)}
+                />
+
+                <RegisterTeamModal
+                    isOpen={isTeamRegisterOpen}
+                    onClose={() => setIsTeamRegisterOpen(false)}
                 />
             </div>
         </>
