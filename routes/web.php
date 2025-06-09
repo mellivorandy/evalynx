@@ -31,6 +31,8 @@ Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+Route::get('/works/{year}', [WorksController::class, 'showByYear'])->name('works.year');
+
 // 建議只保留 resource 路由
 Route::resource('judges', JudgeController::class);
 
